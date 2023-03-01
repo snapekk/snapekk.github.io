@@ -4,28 +4,25 @@
 	<meta charset="UTF-8">
 	<title>Meu site</title>
 	<style>
-		body {
-			margin: 0;
-			padding: 0;
-			font-family: 'Arial', sans-serif;
-			background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Standaard_Nederlandsche_SS.svg/2560px-Standaard_Nederlandsche_SS.svg.png') fixed center;
+		body {	
+			#waffen
+			color: red;
+			border: 5px solid white;
+			padding: 20px;
+			border-radius: 15px;
+
+			background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Standaard_Nederlandsche_SS.svg/2560px-Standaard_Nederlandsche_SS.svg.png') fixed center; /* Define o fundo como uma imagem de galáxia */
 			background-size: cover;
+			font-family: 'Arial', sans-serif;
+			color: white;
 			display: flex;
 			flex-direction: column;
 			align-items: center;
 			justify-content: center;
 			height: 100vh;
-			position: relative;
-		}
-		
-		#background-layer {
-			position: absolute;
-			top: 0;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			background-color: rgba(0, 0, 0, 0.7);
-			z-index: -1;
+			margin: 0;
+			padding: 0;
+			animation: background-animation 10s ease-in-out infinite alternate;
 		}
 
 		h1 {
@@ -33,8 +30,7 @@
 			font-weight: bold;
 			margin: 0;
 			text-align: center;
-			color: white;
-			text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
+			animation: text-animation 10s ease-in-out infinite alternate;
 		}
 
 		h2 {
@@ -53,9 +49,6 @@
 			font-size: 1.5em;
 			margin: 1em;
 			cursor: pointer;
-			text-align: center;
-			position: relative;
-			z-index: 1;
 		}
 
 		.box:hover {
@@ -67,39 +60,39 @@
 			text-decoration: none;
 		}
 
-		.rct {
-			background-color: rgba(255, 255, 255, 0.7);
-			padding: 0.5em;
-			border-radius: 5px;
-			position: absolute;
-			bottom: 1em;
-			left: 50%;
-			transform: translateX(-50%);
-			z-index: 1;
+		@keyframes background-animation {
+			0% {
+				background-color: #000;
+			}
+			50% {
+				background-color: #111;
+			}
+			100% {
+				background-color: #000;
+			}
 		}
 
-		@media screen and (max-width: 768px) {
-			h1 {
-				font-size: 10em;
+		@keyframes text-animation {
+			0% {
+				color: #8B0000;
 			}
-
-			h2 {
-				font-size: 1em;
+			50% {
+				color: #FF0000;
 			}
-
-			.box {
-				font-size: 1em;
-			}
-
-			.rct {
-				font-size: 1em;
+			100% {
+				color: #8B0000;
 			}
 		}
 	</style>
 </head>
 <body>
-	<div id="background-layer"></div>
 	<h1>𝐖𝐀𝐅𝐅𝐄𝐍</h1>
-	<h2>aaa</h2>
-	<div class="box" style="top: 1em; left: 1em;">
-		<a href="https://chat.whatsapp
+	<h2>aaa</h2> <!-- Adiciona o subtexto "teste" abaixo do texto principal -->
+	<div style="display: flex; justify-content: space-between; position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
+		<div class="box" style="position: absolute; top: 0; left: 0;">
+			<a href="https://chat.whatsapp.com/Lvx0jHjddz66SfGXz9WcEk" target="_blank">RCT 1.0</a> <!-- Abre a caixa de ADM's em uma nova aba -->
+		</div>
+		<div class="box" style="position: absolute; top: 0; right: 0;">
+			<a href="https://chat.whatsapp.com/HdxcniLegpDIJCkiIT6St8" target="_blank">RCT 2.0</a>
+		</body>
+</html>
