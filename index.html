@@ -1,92 +1,19 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<meta charset="UTF-8">
-	<title>Meu site</title>
-	<style>
-		body {
-			background: url('https://images.unsplash.com/photo-1521747116042-5a810fda9669?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1920&fit=max&ixid=eyJhcHBfaWQiOjEyMDd9') fixed center; /* Define o fundo como uma imagem de galáxia */
-			background-size: cover;
-			font-family: 'Arial', sans-serif;
-			color: white;
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			justify-content: center;
-			height: 100vh;
-			margin: 0;
-			padding: 0;
-			animation: background-animation 10s ease-in-out infinite alternate;
-		}
-
-		h1 {
-			font-size: 10em;
-			font-weight: bold;
-			margin: 0;
-			text-align: center;
-			animation: text-animation 10s ease-in-out infinite alternate;
-		}
-
-		h2 {
-			font-size: 1.5em;
-			margin: 0;
-			text-align: center;
-			margin-top: 0.5em;
-			color: #ccc;
-		}
-
-		.box {
-			background-color: #333;
-			color: white;
-			padding: 1em;
-			border-radius: 5px;
-			font-size: 1.5em;
-			margin: 1em;
-			cursor: pointer;
-		}
-
-		.box:hover {
-			background-color: #666;
-		}
-
-		.box a {
-			color: white;
-			text-decoration: none;
-		}
-
-		@keyframes background-animation {
-			0% {
-				background-color: #000;
-			}
-			50% {
-				background-color: #111;
-			}
-			100% {
-				background-color: #000;
-			}
-		}
-
-		@keyframes text-animation {
-			0% {
-				color: #8B0000;
-			}
-			50% {
-				color: #FF0000;
-			}
-			100% {
-				color: #8B0000;
-			}
-		}
-	</style>
-</head>
-<body>
-	<h1>𝐖𝐀𝐅𝐅𝐄𝐍</h1>
-	<h2>aaa</h2> <!-- Adiciona o subtexto "teste" abaixo do texto principal -->
-	<div style="display: flex; justify-content: space-between; position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
-		<div class="box" style="position: absolute; top: 0; left: 0;">
-			<a href="https://chat.whatsapp.com/Lvx0jHjddz66SfGXz9WcEk" target="_blank">RCT 1.0</a> <!-- Abre a caixa de ADM's em uma nova aba -->
-		</div>
-		<div class="box" style="position: absolute; top: 0; right: 0;">
-			<a href="https://chat.whatsapp.com/HdxcniLegpDIJCkiIT6St8" target="_blank">RCT 2.0</a>
-		</div>
-		<div class="box" style="position:
+  <head>
+    <meta charset="utf-8" />
+    <title>Waffen</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+  </head>
+  <body>
+    <div id="main">
+      <h1 id="title">Waffen</h1>
+      <p id="subtitle">teste</p>
+    </div>
+    <a href="https://www.youtube.com/" target="_blank" class="admin-box top-left">ADM's</a>
+    <a href="https://www.youtube.com/" target="_blank" class="admin-box top-right">ADM's</a>
+    <a href="https://www.youtube.com/" target="_blank" class="admin-box bottom-left">ADM's</a>
+    <a href="https://www.youtube.com/" target="_blank" class="admin-box bottom-right">ADM's</a>
+    <script src="script.js"></script>
+  </body>
+</html>
