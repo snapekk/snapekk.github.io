@@ -1,81 +1,84 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8">
-	<title>Meu site</title>
-	<style>
-		body {	
-			color: white;
-			font-family: 'Arial', sans-serif;
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			justify-content: center;
-			height: 100vh;
-			margin: 0;
-			padding: 0;
-			background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Standaard_Nederlandsche_SS.svg/2560px-Standaard_Nederlandsche_SS.svg.png') fixed center;
-			background-size: cover;
-		}
+  <meta charset="UTF-8">
+  <title>Meu site</title>
+  <style>
+    body { 
+      color: red;
+      padding: 20px;
+      font-family: 'Arial', sans-serif;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+      background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Standaard_Nederlandsche_SS.svg/2560px-Standaard_Nederlandsche_SS.svg.png') fixed center;
+      background-size: cover;
+      position: relative; /* Adiciona posição relativa para permitir o overlay */
+    }
+    
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0,0,0,0.5);
+      z-index: -1;
+    }
 
-		h1 {
-			font-size: 7vw;
-			font-weight: bold;
-			margin: 0;
-			text-align: center;
-			animation: text-animation 10s ease-in-out infinite alternate;
-		}
+    h1 {
+      font-size: 17em;
+      font-weight: bold;
+      margin: 0;
+      text-align: center;
+    }
 
-		h2 {
-			font-size: 4vw;
-			margin: 0;
-			text-align: center;
-			margin-top: 0.5em;
-			color: #ccc;
-		}
+    h2 {
+      font-size: 1.5em;
+      margin: 0;
+      text-align: center;
+      margin-top: 0.5em;
+      color: #ccc;
+    }
 
-		.box {
-			background-color: #333;
-			color: white;
-			padding: 1em;
-			border-radius: 5px;
-			font-size: 4vw;
-			margin: 1em;
-			cursor: pointer;
-		}
+    .box {
+      background-color: #333;
+      color: white;
+      padding: 1em;
+      border-radius: 5px;
+      font-size: 1.5em;
+      margin: 1em;
+      cursor: pointer;
+    }
 
-		.box:hover {
-			background-color: #666;
-		}
+    .box:hover {
+      background-color: #666;
+    }
 
-		.box a {
-			color: white;
-			text-decoration: none;
-		}
+    .box a {
+      color: white;
+      text-decoration: none;
+    }
 
-		@keyframes text-animation {
-			0% {
-				color: #8B0000;
-			}
-			50% {
-				color: #FF0000;
-			}
-			100% {
-				color: #8B0000;
-			}
-		}
-	</style>
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 7em;
+      }
+    }
+
+  </style>
 </head>
 <body>
-	<h1>Waffen</h1>
-	<h2>aaa</h2>
-	<div style="display: flex; justify-content: space-between; position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
-		<div class="box" style="position: absolute; top: 0; left: 0;">
-			<a href="https://chat.whatsapp.com/Lvx0jHjddz66SfGXz9WcEk" target="_blank">RCT</a>
-		</div>
-		<div class="box" style="position: absolute; top: 0; right: 0;">
-			<a href="https://chat.whatsapp.com/HdxcniLegpDIJCkiIT6St8" target="_blank">RCT</a>
-		</div>
-	</div>
-</body>
-</html>
+  <h1>Waffen</h1>
+  <h2>RCT</h2> 
+  <div style="display: flex; justify-content: space-between; position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
+    <div class="box" style="position: absolute; top: 0; left: 0;">
+      <a href="https://chat.whatsapp.com/Lvx0jHjddz66SfGXz9WcEk" target="_blank">RCT 1.0</a> 
+    </div>
+    <div class="box"
