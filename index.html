@@ -1,21 +1,735 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-<!-- HTML Codes by Quackit.com -->
-<title>
-ohayo</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="keywords" content="owo">
-<meta name="description" content="awa">
-<style>
-body {background-color:#000000;background-image:url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTEvY3fklUicCI6wSVFIy1vsvqBQWqVVidHaA&usqp=CAU);background-repeat:no-repeat;background-position:center center;background-attachment:fixed;}
-h1{font-family:Cursive;color:#ffffff;background-color:#000000;}
-p {font-family:Georgia, serif;font-size:14px;font-style:normal;font-weight:normal;color:#ffffff;background-color:#000000;}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle de Obras - Elektro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700;900&display=swap');
+        
+        :root {
+            --hour-w: 35px;
+            --day-w: calc(var(--hour-w) * 24);
+            --label-w: 180px;
+            --header-h: 60px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8fafc; 
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            color: #1e293b;
+        }
+
+        /* ANIMAÇÃO DE HIGHLIGHT OTIMIZADA */
+        @keyframes soft-pulse {
+            0% { transform: scale(1); outline: 0px solid transparent; }
+            50% { transform: scale(1.02); outline: 3px solid #3b82f6; }
+            100% { transform: scale(1); outline: 0px solid transparent; }
+        }
+
+        .pulse-active {
+            animation: soft-pulse 0.8s ease-in-out 3;
+            z-index: 50 !important;
+            position: relative;
+        }
+
+        /* LAYOUT PRINCIPAL */
+        .app-container {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        /* SIDEBAR DINÂMICA */
+        .sidebar-container {
+            width: 320px;
+            background: #fff;
+            border-right: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            z-index: 60;
+            transition: transform 0.2s ease, margin-left 0.2s ease;
+        }
+        .sidebar-container.collapsed {
+            transform: translateX(-100%);
+            margin-left: -320px;
+        }
+        .sidebar-scroll { flex: 1; overflow-y: auto; background: #fff; }
+
+        /* RELATÓRIO DE 3 LINHAS */
+        .dashboard-row {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            border-bottom: 1px solid #f1f5f9;
+            gap: 16px;
+            min-height: 48px;
+        }
+        .row-label {
+            font-size: 10px;
+            font-weight: 900;
+            color: #64748b;
+            width: 100px;
+            flex-shrink: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .row-items {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            flex: 1;
+            padding: 2px 0;
+        }
+        .row-item-chip {
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 800;
+            white-space: nowrap;
+            cursor: pointer;
+            border: 1px solid #e2e8f0;
+            background: #fff;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .row-item-chip:active { background: #f8fafc; }
+
+        /* GANTT */
+        .gantt-viewport {
+            flex: 1;
+            overflow: auto;
+            background: #fff;
+            position: relative;
+        }
+
+        .gantt-container {
+            display: grid;
+            grid-template-columns: var(--label-w) auto;
+            min-width: max-content;
+        }
+
+        .gantt-corner {
+            position: sticky; top: 0; left: 0; z-index: 100;
+            background: #1e293b; color: white; height: var(--header-h);
+            display: flex; align-items: center; padding: 0 16px;
+            font-size: 11px; font-weight: 800; text-transform: uppercase;
+            border-right: 1px solid #0f172a; border-bottom: 1px solid #0f172a;
+        }
+
+        .gantt-header-timeline {
+            position: sticky; top: 0; z-index: 90; height: var(--header-h);
+            display: flex; background: #f8fafc; border-bottom: 1px solid #cbd5e1;
+        }
+
+        .gantt-label-column {
+            position: sticky; left: 0; z-index: 80; background: #f8fafc;
+            width: var(--label-w); border-right: 1px solid #cbd5e1;
+        }
+
+        .gantt-label-cell {
+            height: 40px; display: flex; align-items: center; padding: 0 16px;
+            font-size: 12px; font-weight: 700; color: #334155;
+            background: #f8fafc; border-bottom: 1px solid #f1f5f9;
+            text-transform: uppercase;
+        }
+
+        .gantt-data-row {
+            height: 40px; position: relative;
+            background-image: 
+                linear-gradient(to right, #cbd5e1 1.5px, transparent 1.5px), 
+                linear-gradient(to right, #f1f5f9 1px, transparent 1px);
+            background-size: var(--day-w) 100%, var(--hour-w) 100%;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .day-info {
+            height: 30px; background: #f1f5f9; color: #475569;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 10px; font-weight: 800; border-bottom: 1px solid #cbd5e1;
+        }
+        .hour-tick {
+            width: var(--hour-w); flex-shrink: 0; border-right: 1px solid #f1f5f9;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 8px; font-weight: 700; color: #94a3b8;
+        }
+
+        /* BARRAS DE OBRA - CONTRASTE EQUILIBRADO */
+        .task-bar {
+            position: absolute; height: 32px; top: 4px; border-radius: 8px;
+            display: flex; align-items: center; padding: 0 12px;
+            font-size: 11px; font-weight: 800; color: #fff !important; 
+            z-index: 20; border: 1px solid rgba(0,0,0,0.15);
+            overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+            cursor: pointer; pointer-events: auto;
+        }
+        .task-bar:hover { filter: brightness(1.05); }
+        
+        .task-orange { background-color: #f59e0b; }
+        .task-purple { background-color: #8b5cf6; }
+        .task-red    { background-color: #10b981; }
+
+        /* DOCK DE BUSCA NO RODAPÉ */
+        .finder-dock {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: #1e293b; border: 1px solid rgba(255,255,255,0.1); padding: 8px 24px;
+            border-radius: 16px; display: flex; align-items: center; gap: 20px;
+            box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.4); z-index: 400;
+        }
+
+        .search-results {
+            position: absolute; bottom: 100%; left: 0; width: 100%;
+            background: white; border-radius: 12px; margin-bottom: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15); max-height: 250px;
+            overflow-y: auto; display: none; z-index: 501;
+            border: 1px solid #e2e8f0;
+        }
+
+        .search-result-item {
+            padding: 12px 16px; font-size: 13px; border-bottom: 1px solid #f1f5f9;
+            cursor: pointer; color: #1e293b; font-weight: 600;
+        }
+        .search-result-item:hover { background: #f8fafc; }
+
+        .filter-bubble {
+            padding: 4px 12px; border-radius: 8px; background: #f1f5f9;
+            color: #64748b; font-size: 10px; font-weight: 700;
+            cursor: pointer; border: 1px solid transparent; transition: background 0.1s;
+        }
+        .filter-bubble.active { background: #1e293b; color: #fff; }
+
+        /* INPUTS E BOTÕES FIX LAG */
+        .modal-input {
+            background-color: #f8fafc !important; color: #1e293b !important;
+            border: 1px solid #e2e8f0 !important; padding: 12px !important;
+            font-weight: 600 !important; border-radius: 10px !important;
+        }
+        .modal-input:focus { border-color: #3b82f6 !important; background: #fff !important; outline: none; }
+
+        .team-toggle {
+            padding: 10px 16px; border-radius: 10px; border: 1px solid #e2e8f0;
+            background: #f8fafc; color: #64748b; font-size: 12px; font-weight: 700; cursor: pointer;
+        }
+        .team-toggle.active { background: #3b82f6; border-color: #3b82f6; color: white; }
+
+        .date-drawer-header {
+            background-color: #f8fafc; color: #64748b; padding: 12px 16px;
+            display: flex; justify-content: space-between; align-items: center;
+            cursor: pointer; position: sticky; top: 0; z-index: 10; border-bottom: 1px solid #f1f5f9;
+        }
+
+        .sidebar-card {
+            padding: 16px; border-bottom: 1px solid #f1f5f9;
+            position: relative; cursor: pointer; border-left-width: 5px;
+        }
+        .card-pending { border-left-color: #f59e0b; background: #fffaf5; }
+        .card-finished { border-left-color: #10b981; background: #f0fdf4; }
+        .card-reprogram { border-left-color: #94a3b8; background: #f8fafc; opacity: 0.6; }
+        
+        .obra-code-text { color: #1e293b; font-size: 15px; font-weight: 800; }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
 </head>
 <body>
-<h1>hehe</h1>
-<p>awa</p>
-<p></p>
+
+    <!-- HEADER SUPERIOR -->
+    <header class="bg-white h-16 flex items-center justify-between px-6 z-[110] border-b border-slate-200">
+        <div class="flex items-center gap-4">
+            <button onclick="toggleSidebar()" class="p-2 hover:bg-slate-100 rounded-xl text-slate-400">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+            <div class="bg-orange-500 p-2 rounded-xl text-white shadow-sm">
+                <i data-lucide="hard-hat" class="w-5 h-5"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold tracking-tight text-slate-800 leading-none mb-1">Quintiq Elektro</h1>
+                <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest">Controle de Campo Bertioga</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-4">
+            <div class="flex gap-4 border-r border-slate-200 pr-6 mr-2">
+                <button onclick="exportData()" class="text-slate-500 font-bold text-[10px] hover:text-blue-600 uppercase">Exportar</button>
+                <button onclick="document.getElementById('import-input').click()" class="text-slate-500 font-bold text-[10px] hover:text-orange-600 uppercase">Importar</button>
+                <input type="file" id="import-input" class="hidden" accept=".txt,.json" onchange="importData(event)">
+            </div>
+            <button onclick="scrollToToday()" class="bg-slate-100 text-slate-700 px-5 py-2 rounded-xl font-bold text-[10px] border border-slate-200 hover:bg-slate-200">HOJE</button>
+            <button onclick="toggleModal('add')" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl font-bold text-xs uppercase shadow-lg active:scale-95">LANÇAR LOTE</button>
+        </div>
+    </header>
+
+    <div class="app-container">
+        <!-- SIDEBAR -->
+        <aside id="sidebar" class="sidebar-container">
+            <div class="p-4 bg-white border-b border-slate-100">
+                <div class="flex justify-between items-center mb-4 px-1">
+                    <span class="text-[11px] font-bold text-slate-400 uppercase tracking-widest" id="sidebar-count">0 OBRAS</span>
+                </div>
+                <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1" id="filter-bubbles-container"></div>
+            </div>
+            <div id="sidebar-list" class="sidebar-scroll"></div>
+        </aside>
+
+        <!-- ÁREA CENTRAL -->
+        <main class="flex-1 flex flex-col overflow-hidden bg-white">
+            <!-- DASHBOARD DE 3 LINHAS -->
+            <div class="bg-white border-b border-slate-200 shadow-sm">
+                <div class="dashboard-row">
+                    <div class="row-label">Reprogramar</div>
+                    <div id="row-reprogram" class="row-items no-scrollbar"></div>
+                </div>
+                <div class="dashboard-row">
+                    <div class="row-label">Apontadas</div>
+                    <div id="row-finished" class="row-items no-scrollbar"></div>
+                </div>
+                <div class="dashboard-row">
+                    <div class="row-label">Pendentes</div>
+                    <div id="row-pending" class="row-items no-scrollbar"></div>
+                </div>
+            </div>
+
+            <div class="gantt-viewport" id="gantt-scroll-parent">
+                <div class="gantt-container" id="gantt-main-container">
+                    <div class="gantt-corner">Equipe / Bloco</div>
+                    <div class="gantt-header-timeline" id="timeline-header"></div>
+                    <div class="gantt-label-column" id="timeline-labels"></div>
+                    <div class="gantt-data-grid" id="timeline-grid"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- DOCK DE BUSCA -->
+    <div class="finder-dock">
+        <input type="date" id="finder-date" onchange="scrollToDate(this.value)" class="bg-transparent border-none text-white text-[13px] font-bold outline-none cursor-pointer hover:text-blue-400">
+        <div class="w-px h-6 bg-slate-700"></div>
+        <div class="relative flex items-center">
+            <i data-lucide="search" class="w-4 h-4 text-slate-500 mr-2"></i>
+            <input type="text" id="finder-work" oninput="handleWorkSearch(this.value)" placeholder="Localizar obra..." class="bg-transparent border-none text-white text-[14px] font-bold outline-none w-64 placeholder:text-slate-600">
+            <div id="search-results" class="search-results"></div>
+        </div>
+        <div id="current-date-display" class="text-[10px] font-bold text-blue-500 uppercase tracking-tighter ml-2"></div>
+    </div>
+
+    <!-- MODAL PRINCIPAL -->
+    <div id="modal" class="fixed inset-0 bg-slate-900/60 hidden items-center justify-center z-[600] p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-[28px] w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh] shadow-2xl border border-slate-200">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h3 id="modal-title" class="text-xl font-bold text-slate-800 uppercase italic">Lançamento</h3>
+                <button onclick="closeModal()"><i data-lucide="x" class="w-6 h-6 text-slate-400 hover:text-red-500"></i></button>
+            </div>
+            <div class="p-8 overflow-y-auto flex-1 space-y-8">
+                <div class="grid grid-cols-2 gap-6 text-slate-800">
+                    <div class="col-span-2">
+                        <label class="text-[11px] font-bold uppercase text-slate-400 mb-2 block px-1">Código da Obra</label>
+                        <input type="text" id="m-code" class="w-full modal-input uppercase" placeholder="MR-00XXXXXX">
+                    </div>
+                    <div class="col-span-2">
+                        <label class="text-[11px] font-bold uppercase text-slate-400 mb-3 block px-1">Equipes</label>
+                        <div id="team-toggles-container" class="flex flex-wrap gap-3"></div>
+                    </div>
+                    <div>
+                        <label class="text-[11px] font-bold uppercase text-slate-400 mb-2 block px-1">Data</label>
+                        <input type="date" id="m-date" class="w-full modal-input">
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="flex-1"><label class="text-[11px] font-bold uppercase text-slate-400 mb-2 block px-1">Início</label><input type="time" id="m-start" class="w-full modal-input"></div>
+                        <div class="flex-1"><label class="text-[11px] font-bold uppercase text-slate-400 mb-2 block px-1">Fim</label><input type="time" id="m-end" class="w-full modal-input"></div>
+                    </div>
+                    <div class="col-span-2">
+                        <label class="text-[11px] font-bold uppercase text-slate-400 mb-2 block px-1">Notas / Relatório</label>
+                        <textarea id="m-comment" class="w-full modal-input h-28 resize-none" placeholder="Relatório de campo opcional..."></textarea>
+                    </div>
+                </div>
+                <button id="modal-primary-btn" onclick="addItem()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-2xl shadow-xl shadow-blue-200 transition-all">ADICIONAR À FILA</button>
+                <div id="batch-table-container" class="border border-slate-100 rounded-2xl bg-white mt-4 overflow-hidden shadow-sm">
+                    <table class="w-full">
+                        <thead class="bg-slate-50 border-b border-slate-100 text-[10px] uppercase text-slate-400 font-bold">
+                            <tr><th class="p-4 text-left">Obra</th><th class="p-4 text-left">Equipe</th><th class="p-4 text-right">Ação</th></tr>
+                        </thead>
+                        <tbody id="temp-table" class="text-sm font-semibold"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="p-8 bg-slate-50 border-t border-slate-100 flex gap-4">
+                <button onclick="closeModal()" class="flex-1 font-bold text-slate-400 uppercase text-xs">Cancelar</button>
+                <button id="modal-confirm-btn" onclick="finalize()" disabled class="flex-[2] bg-slate-800 hover:bg-black text-white py-4 rounded-2xl font-bold text-xs shadow-md">GRAVAR NO SISTEMA</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- OVERVIEW -->
+    <div id="modal-overview" class="fixed inset-0 bg-slate-900/60 hidden items-center justify-center z-[700] p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-[40px] w-full max-w-md overflow-hidden shadow-2xl border border-slate-100 transform scale-100">
+            <div class="bg-[#1e293b] p-10 text-white relative">
+                <button onclick="closeOverview()" class="absolute top-8 right-8 text-slate-400 hover:text-white transition-colors"><i data-lucide="x" class="w-8 h-8"></i></button>
+                <div class="flex items-center gap-2 mb-3">
+                    <div id="ov-status-dot" class="w-3 h-3 rounded-full bg-orange-500"></div>
+                    <span id="ov-status-text" class="text-[11px] font-bold uppercase tracking-widest text-slate-400"></span>
+                </div>
+                <h2 id="ov-code" class="text-3xl font-bold italic tracking-tighter uppercase leading-none"></h2>
+            </div>
+            <div class="p-8 space-y-8">
+                <div class="grid grid-cols-2 gap-5 text-black">
+                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100"><span class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Equipe</span><span id="ov-teams-tags" class="text-sm font-bold text-slate-700 uppercase"></span></div>
+                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100"><span class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Janela</span><span id="ov-time" class="text-sm font-bold text-slate-700"></span></div>
+                </div>
+                <div class="bg-blue-50 p-5 rounded-2xl border border-blue-100 text-black text-center"><span id="ov-date" class="text-lg font-bold text-blue-900 uppercase tracking-tight"></span></div>
+                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 min-h-[140px] text-black"><p id="ov-comment" class="text-sm font-semibold italic text-slate-600 leading-relaxed"></p></div>
+                <div class="grid grid-cols-3 gap-3">
+                    <button id="ov-edit-btn" class="bg-slate-100 border border-slate-200 py-4 rounded-2xl font-bold text-[10px] uppercase text-slate-600">EDITAR</button>
+                    <button id="ov-repro-btn" class="bg-orange-100 border border-orange-200 text-orange-800 py-4 rounded-2xl font-bold text-[10px] uppercase">REPROG.</button>
+                    <button id="ov-toggle-btn" class="flex-[2] bg-blue-600 text-white py-4 rounded-2xl font-bold uppercase text-[10px] shadow-lg shadow-blue-200"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STATUS MODAL -->
+    <div id="modal-status" class="fixed inset-0 bg-slate-900/60 hidden items-center justify-center z-[800] p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-[40px] w-full max-w-sm overflow-hidden shadow-2xl border border-slate-200">
+            <div class="p-10 space-y-6 text-center">
+                <h3 id="status-modal-title" class="text-2xl font-bold text-slate-800 uppercase tracking-tight">Confirmar</h3>
+                <p id="status-modal-desc" class="text-[12px] font-bold text-slate-500 uppercase tracking-widest leading-relaxed"></p>
+                <textarea id="status-m-comment" placeholder="Breve nota de encerramento..." class="w-full modal-input h-32 text-center"></textarea>
+                <div class="flex gap-4">
+                    <button onclick="closeStatusModal()" class="flex-1 font-bold text-slate-400 text-xs uppercase hover:text-slate-600 transition-colors">Voltar</button>
+                    <button id="status-confirm-btn" class="flex-[2] bg-blue-600 text-white py-5 rounded-[20px] font-bold uppercase text-xs shadow-lg shadow-blue-200">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const TEAMS = ["BB22", "BB30", "BB40", "BB45", "BB99"];
+        const START_TS = new Date(2025, 0, 1).getTime(); 
+        const END_TS = new Date(2028, 11, 31).getTime();
+        const MS_PER_DAY = 86400000;
+        const WEEKDAYS = ["DOMINGO", "SEGUNDA-FEIRA", "TERÇA-FEIRA", "QUARTA-FEIRA", "QUINTA-FEIRA", "SEXTA-FEIRA", "SÁBADO"];
+        const MONTHS = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
+        let currentZoom = 35; 
+
+        let works = JSON.parse(localStorage.getItem('obras_quintiq_blindada')) || [];
+        let editingId = null; let tempItems = []; let activeFilter = 'all'; let collapsedDates = new Set(); let pendingStatusAction = null;
+
+        // --- DATA MANAGEMENT FUNCTIONS (FIX REF ERRORS) ---
+
+        window.exportData = function() {
+            const blob = new Blob([JSON.stringify(works, null, 2)], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url; link.download = `elektro_backup_${Date.now()}.txt`; link.click();
+        };
+
+        window.importData = function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    works = JSON.parse(e.target.result);
+                    saveData(); render();
+                } catch (err) { alert("Arquivo inválido."); }
+                event.target.value = '';
+            };
+            reader.readAsText(file);
+        };
+
+        function isoToBR(iso) { if(!iso) return ''; const [y, m, d] = iso.split('-'); return `${d}/${m}/${y}`; }
+        function getDaysSinceStart(iso) { if(!iso) return 0; const [y, m, d] = iso.split('-').map(Number); return Math.round((new Date(y, m-1, d).getTime() - START_TS)/MS_PER_DAY); }
+        function getISODateLocal() { const n = new Date(); return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}-${String(n.getDate()).padStart(2,'0')}`; }
+        function saveData() { localStorage.setItem('obras_quintiq_blindada', JSON.stringify(works)); }
+
+        function init() {
+            lucide.createIcons();
+            applyZoom();
+            updateHeader();
+            const fDate = document.getElementById('finder-date');
+            if(fDate) fDate.value = getISODateLocal();
+            setTimeout(scrollToToday, 500);
+        }
+
+        window.toggleSidebar = function() {
+            document.getElementById('sidebar').classList.toggle('collapsed');
+        };
+
+        window.scrollToToday = function() { scrollToDate(getISODateLocal()); };
+
+        function updateHeader() {
+            const n = new Date(); 
+            const dStr = `${String(n.getDate()).padStart(2,'0')}/${String(n.getMonth()+1).padStart(2,'0')}/${n.getFullYear()}`;
+            const e1 = document.getElementById('current-date-display'); if(e1) e1.innerText = dStr;
+        }
+
+        function changeZoom(v) { currentZoom = Math.max(15, Math.min(100, currentZoom + v)); applyZoom(); }
+
+        function applyZoom() {
+            document.documentElement.style.setProperty('--hour-w', `${currentZoom}px`);
+            const header = document.getElementById('timeline-header');
+            if(!header) return;
+            header.innerHTML = '';
+            const fragment = document.createDocumentFragment();
+            const totalDays = Math.floor((END_TS - START_TS)/MS_PER_DAY)+1;
+            const dayStep = currentZoom < 25 ? 2 : 1;
+            for (let i = 0; i < totalDays; i += dayStep) {
+                const dObj = new Date(START_TS + (i * MS_PER_DAY));
+                const group = document.createElement('div');
+                group.className = 'day-group';
+                if(dayStep > 1) group.style.width = `calc(var(--day-w) * ${dayStep})`;
+                const info = document.createElement('div');
+                info.className = 'day-info';
+                info.innerText = `${WEEKDAYS[dObj.getDay()].substring(0,3)} ${String(dObj.getDate()).padStart(2,'0')}/${String(dObj.getMonth()+1).padStart(2,'0')}`;
+                const hours = document.createElement('div');
+                hours.className = 'hour-row flex h-[30px]';
+                const tickStep = currentZoom < 30 ? 12 : 6;
+                for (let h = 0; h < 24 * dayStep; h += tickStep) {
+                    const tick = document.createElement('div');
+                    tick.className = 'hour-tick';
+                    tick.style.width = `${currentZoom * tickStep}px`;
+                    tick.innerText = (h % 24).toString().padStart(2, '0');
+                    hours.appendChild(tick);
+                }
+                group.appendChild(info); group.appendChild(hours); fragment.appendChild(group);
+            }
+            header.appendChild(fragment);
+            const grid = document.getElementById('timeline-grid');
+            if(grid) grid.style.width = `calc(var(--day-w) * ${totalDays})`;
+            render();
+        }
+
+        window.scrollToDate = function(iso, start = "08:00") {
+            const diff = getDaysSinceStart(iso);
+            const [h, m] = start.split(':').map(Number);
+            const target = (diff * 24 * currentZoom) + ((h + m/60) * currentZoom) - 350;
+            const parent = document.getElementById('gantt-scroll-parent');
+            if(parent) parent.scrollTo({ left: target, behavior: 'smooth' });
+        };
+
+        window.triggerPulse = function(id) {
+            const el = document.getElementById(`task-${id}`);
+            if(el) { el.classList.add('pulse-active'); setTimeout(()=>el.classList.remove('pulse-active'), 3000); }
+        };
+
+        window.toggleDrawer = function(date) { collapsedDates.has(date) ? collapsedDates.delete(date) : collapsedDates.add(date); render(); };
+
+        window.setActiveFilter = function(f) { activeFilter = f; render(); };
+
+        function render() {
+            const list = document.getElementById('sidebar-list');
+            const labels = document.getElementById('timeline-labels');
+            const grid = document.getElementById('timeline-grid');
+            const rowRepro = document.getElementById('row-reprogram');
+            const rowFinished = document.getElementById('row-finished');
+            const rowPending = document.getElementById('row-pending');
+            
+            if(!list || !labels || !grid) return;
+
+            generateFilterBubbles();
+
+            labels.innerHTML = ''; grid.innerHTML = ''; list.innerHTML = '';
+            rowRepro.innerHTML = ''; rowFinished.innerHTML = ''; rowPending.innerHTML = '';
+
+            const reproList = works.filter(w => w.status === 'reprogramar');
+            const finishedList = works.filter(w => w.status === 'finished');
+            const pendingList = works.filter(w => w.status === 'pending');
+
+            const renderChips = (container, l, colorClass) => {
+                if(l.length === 0) { container.innerHTML = `<span class="text-[9px] text-slate-300 italic px-2">Vazio</span>`; return; }
+                container.innerHTML = l.map(w => `<div onclick="scrollToDate('${w.date}', '${w.start}'); triggerPulse('${w.id}')" class="row-item-chip ${colorClass} uppercase">${w.code}</div>`).join('');
+            };
+
+            renderChips(rowRepro, reproList, 'border-l-orange-400 border-l-4');
+            renderChips(rowFinished, finishedList, 'border-l-emerald-400 border-l-4');
+            renderChips(rowPending, pendingList, 'border-l-orange-400 border-l-4');
+
+            document.getElementById('sidebar-count').innerText = `${works.length} OBRAS`;
+
+            let filtered = works;
+            if(activeFilter==='finished') filtered = works.filter(w=>w.status==='finished');
+            else if(activeFilter==='pending') filtered = works.filter(w=>w.status==='pending');
+            else if(activeFilter==='reprogramar') filtered = works.filter(w=>w.status==='reprogramar');
+            else if(TEAMS.includes(activeFilter)) filtered = works.filter(w=>w.team===activeFilter);
+
+            const grouped = {};
+            filtered.sort((a,b)=>(a.date+a.start).localeCompare(b.date+b.start)).forEach(w => { if(!grouped[w.date]) grouped[w.date]=[]; grouped[w.date].push(w); });
+
+            Object.keys(grouped).sort().forEach(d => {
+                const header = document.createElement('div');
+                header.className = 'date-drawer-header';
+                header.onclick = () => toggleDrawer(d);
+                header.innerHTML = `<span>📅 ${isoToBR(d)}</span><span class="text-xs opacity-50">(${grouped[d].length})</span>`;
+                list.appendChild(header);
+
+                if(!collapsedDates.has(d)) {
+                    grouped[d].forEach(w => {
+                        const card = document.createElement('div');
+                        const stCl = w.status==='pending'?'card-pending':(w.status==='finished'?'card-finished':'card-reprogram');
+                        card.className = `sidebar-card ${stCl}`;
+                        card.onclick = () => { if(w.status!=='reprogramar'){scrollToDate(w.date, w.start); triggerPulse(w.id);} };
+                        card.innerHTML = `<div class="flex justify-between items-start group"><div class="flex-1"><p class="obra-code-text">${w.code}</p><p class="text-[11px] font-bold text-slate-400">${isoToBR(w.date)} • ${w.start}</p><p class="text-[10px] font-bold text-blue-500 uppercase">${w.team}</p></div><div class="flex gap-2 opacity-0 group-hover:opacity-100"><button onclick="toggleWork(${w.id},'${w.code}',event)" class="bg-white p-2 border border-slate-100 rounded-xl shadow-sm text-emerald-500"><i data-lucide="check" class="w-4 h-4"></i></button><button onclick="toggleModal('edit',${w.id})" class="bg-white p-2 border border-slate-100 rounded-xl shadow-sm text-slate-400"><i data-lucide="pencil" class="w-4 h-4"></i></button></div></div>`;
+                        list.appendChild(card);
+                    });
+                }
+            });
+
+            TEAMS.forEach(t => {
+                const lb = document.createElement('div'); lb.className = 'gantt-label-cell'; lb.innerText = t; labels.appendChild(lb);
+                const row = document.createElement('div'); row.className = 'gantt-data-row';
+                works.filter(i => i.team === t && i.status !== 'reprogramar').forEach(item => {
+                    const diff = getDaysSinceStart(item.date);
+                    if(diff >= 0) {
+                        const [sh, sm] = item.start.split(':').map(Number);
+                        const [eh, em] = item.end.split(':').map(Number);
+                        const left = (diff * 24 * currentZoom) + ((sh + sm/60) * currentZoom);
+                        const width = ((eh+em/60)-(sh+sm/60)) * currentZoom;
+                        const block = document.createElement('div');
+                        block.className = `task-bar ${item.status==='finished'?'task-red':(t==='BB30'?'task-orange':'task-purple')}`;
+                        block.id = `task-${item.id}`; block.style.left = `${left}px`; block.style.width = `${Math.max(width, 30)}px`;
+                        block.innerText = item.code; 
+                        block.onclick = (e) => { e.preventDefault(); e.stopPropagation(); openOverview(item.id); };
+                        row.appendChild(block);
+                    }
+                });
+                grid.appendChild(row);
+            });
+            lucide.createIcons();
+        }
+
+        function generateFilterBubbles() {
+            const container = document.getElementById('filter-bubbles-container');
+            const btns = [{id:'all',l:'Todas'},{id:'finished',l:'Apontadas'},{id:'pending',l:'Aguardando'},{id:'reprogramar',l:'Repro'}];
+            container.innerHTML = btns.map(b => `<div onclick="setActiveFilter('${b.id}')" class="filter-bubble ${activeFilter===b.id?'active':''}">${b.l}</div>`).join('') + `<div class="w-px h-5 bg-slate-100 mx-1 flex-shrink-0"></div>` + TEAMS.map(t => `<div onclick="setActiveFilter('${t}')" class="filter-bubble ${activeFilter===t?'active':''}">${t}</div>`).join('');
+        }
+
+        function generateTeamToggles(selected = []) {
+            const container = document.getElementById('team-toggles-container');
+            if(!container) return;
+            container.innerHTML = TEAMS.map(t => `<div onclick="this.classList.toggle('active')" id="toggle-${t}" class="team-toggle ${selected.includes(t) ? 'active' : ''}">${t}</div>`).join('');
+        }
+
+        function getSelectedTeams() { return Array.from(document.querySelectorAll('.team-toggle.active')).map(el => el.innerText.trim()); }
+
+        window.toggleModal = function(mode='add', id=null) {
+            const m = document.getElementById('modal');
+            m.classList.remove('hidden'); m.classList.add('flex');
+            if(mode==='edit') {
+                const item = works.find(w=>w.id == id); editingId = id;
+                document.getElementById('m-code').value = item.code;
+                document.getElementById('m-date').value = item.date;
+                document.getElementById('m-start').value = item.start;
+                document.getElementById('m-end').value = item.end;
+                document.getElementById('m-comment').value = item.comment || '';
+                generateTeamToggles([item.team]);
+                document.getElementById('modal-title').innerText = "Editar Obra";
+                document.getElementById('modal-primary-btn').innerText = "SALVAR ALTERAÇÕES";
+                document.getElementById('modal-confirm-btn').style.display = "none";
+            } else {
+                tempItems = []; document.getElementById('m-code').value = '';
+                document.getElementById('m-date').value = getISODateLocal();
+                document.getElementById('m-comment').value = '';
+                generateTeamToggles(["BB30"]);
+                document.getElementById('modal-title').innerText = "Lançamento";
+                document.getElementById('modal-primary-btn').innerText = "ADICIONAR À FILA";
+                document.getElementById('modal-confirm-btn').style.display = "block";
+                updateTempList();
+            }
+        };
+
+        window.addItem = function() {
+            const code = document.getElementById('m-code').value.trim().toUpperCase();
+            const date = document.getElementById('m-date').value;
+            const teams = getSelectedTeams();
+            if(!code || !date || teams.length === 0) return;
+            teams.forEach(t => tempItems.push({ id: Date.now()+Math.random(), code, date, team: t, start: document.getElementById('m-start').value, end: document.getElementById('m-end').value, comment: document.getElementById('m-comment').value, status: 'pending' }));
+            document.getElementById('m-code').value = ''; updateTempList();
+        };
+
+        window.updateTempList = function() {
+            const tempTable = document.getElementById('temp-table');
+            if(!tempTable) return;
+            tempTable.innerHTML = tempItems.map(item => `<tr class="border-b border-slate-50"><td class="p-3 font-bold text-slate-800">${item.code}</td><td class="p-3 font-bold text-blue-500">${item.team}</td><td class="p-3 text-right"><button onclick="tempItems=tempItems.filter(x=>x.id!==${item.id});updateTempList();" class="text-red-300 hover:text-red-500 font-black px-2">X</button></td></tr>`).join('');
+            document.getElementById('modal-confirm-btn').disabled = tempItems.length === 0;
+        };
+
+        window.finalize = function() {
+            tempItems.forEach(ni => { const idx = works.findIndex(w => w.code === ni.code && w.status === 'reprogramar'); if(idx !== -1) works.splice(idx, 1); });
+            works = [...works, ...tempItems]; saveData(); closeModal(); render();
+        };
+
+        window.toggleWork = function(id, code, event) {
+            event.stopPropagation(); const w = works.find(x => x.id == id);
+            if(w.status==='finished') { works=works.map(x=>x.id==id?{...x,status:'pending'}:x); saveData(); render(); }
+            else openStatusModal(id, 'finished', `Finalizar obra ${code} (${w.team})`);
+        };
+
+        window.setReprogramar = function(id, code, event) {
+            if(event) event.stopPropagation();
+            const w = works.find(x => x.id == id);
+            openStatusModal(id, 'reprogramar', `Reprogramar obra ${code} (${w.team})`);
+        };
+
+        window.openStatusModal = function(id, st, desc) {
+            pendingStatusAction = {id, status: st};
+            document.getElementById('modal-status').classList.remove('hidden');
+            document.getElementById('modal-status').classList.add('flex');
+            document.getElementById('status-modal-desc').innerText = desc;
+            document.getElementById('status-confirm-btn').onclick = () => {
+                works = works.map(x => x.id == id ? {...x, status: st, comment: document.getElementById('status-m-comment').value.trim() || x.comment} : x);
+                saveData(); render(); closeStatusModal();
+            };
+        };
+
+        window.openOverview = function(id) {
+            const item = works.find(w => w.id == id);
+            if (!item) return;
+            const m = document.getElementById('modal-overview');
+            document.getElementById('ov-code').innerText = item.code;
+            document.getElementById('ov-time').innerText = `${item.start} - ${item.end}`;
+            const [y, m_iso, d] = item.date.split('-');
+            const dObj = new Date(y, m_iso-1, d);
+            document.getElementById('ov-date').innerText = `${WEEKDAYS[dObj.getDay()]}, ${d}/${m_iso}/${y}`;
+            document.getElementById('ov-comment').innerText = item.comment || "Sem notas registradas.";
+            document.getElementById('ov-teams-tags').innerText = item.team;
+            
+            const dot = document.getElementById('ov-status-dot');
+            const txt = document.getElementById('ov-status-text');
+            const btn = document.getElementById('ov-toggle-btn');
+            const btnRepro = document.getElementById('ov-repro-btn');
+            
+            if (item.status === 'finished') { dot.style.backgroundColor = "#10b981"; txt.innerText = "Apontada"; btn.innerText = "REVERTER"; btnRepro.classList.add('hidden'); }
+            else if (item.status === 'reprogramar') { dot.style.backgroundColor = "#64748b"; txt.innerText = "Reprogramada"; btn.innerText = "ATIVAR"; btnRepro.classList.add('hidden'); }
+            else { dot.style.backgroundColor = "#f97316"; txt.innerText = "Pendente"; btn.innerText = "FINALIZAR"; btnRepro.classList.remove('hidden'); }
+            
+            document.getElementById('ov-edit-btn').onclick = () => { closeOverview(); toggleModal('edit', id); };
+            btnRepro.onclick = () => { closeOverview(); setReprogramar(id, item.code); };
+            btn.onclick = () => { closeOverview(); toggleWork(id, item.code, { stopPropagation: () => {} }); closeOverview(); };
+            m.classList.remove('hidden'); m.classList.add('flex');
+            lucide.createIcons();
+        };
+
+        window.handleWorkSearch = function(q) {
+            const div = document.getElementById('search-results');
+            if(!q || q.length < 2) { div.style.display='none'; return; }
+            const search = q.toLowerCase();
+            const filtered = works.filter(w => w.code.toLowerCase().includes(search)).slice(0, 10);
+            if (filtered.length > 0) {
+                div.innerHTML = filtered.map(w => `<div class="search-result-item" onclick="scrollToDate('${w.date}','${w.start}'); triggerPulse('${w.id}'); document.getElementById('search-results').style.display='none';"><span>${w.code}</span><span class="text-slate-400 font-bold ml-auto text-[10px] uppercase">${w.team}</span></div>`).join('');
+                div.style.display = 'block';
+            } else div.style.display = 'none';
+        };
+
+        window.closeOverview = function() { document.getElementById('modal-overview').classList.add('hidden'); };
+        window.closeStatusModal = function() { document.getElementById('modal-status').classList.add('hidden'); };
+        window.closeModal = function() { document.getElementById('modal').classList.add('hidden'); };
+
+        window.onload = init;
+    </script>
 </body>
 </html>
