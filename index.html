@@ -6,6 +6,12 @@
     <title>Controle de Obras - Elektro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        // Configuração do Tailwind para Dark Mode por classe
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700;900&display=swap');
         
@@ -19,12 +25,26 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f8fafc; 
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            color: #1e293b;
+            height: 100vh; margin: 0; overflow: hidden;
+            display: flex; flex-direction: column; color: #1e293b;
+        }
+
+        /* DARK MODE OVERRIDES */
+        .dark body { background-color: #0f172a; color: #f1f5f9; }
+        .dark .bg-white { background-color: #1e293b !important; }
+        .dark .sidebar-container, .dark header, .dark .dashboard-row, .dark .gantt-label-cell { 
+            background-color: #1e293b !important; border-color: #334155 !important; 
+        }
+        .dark .gantt-corner { background: #0f172a; border-color: #334155; }
+        .dark .gantt-header-timeline { background: #1e293b; border-color: #334155; }
+        .dark .day-info { background: #334155; color: #cbd5e1; border-color: #475569; }
+        .dark .hour-tick { border-color: #334155; color: #64748b; }
+        .dark .sidebar-card { border-bottom-color: #334155; }
+        .dark .modal-input { background-color: #0f172a !important; color: #f1f5f9 !important; border-color: #334155 !important; }
+        .dark .gantt-data-row {
+            background-image: 
+                linear-gradient(to right, #334155 1.5px, transparent 1.5px), 
+                linear-gradient(to right, #1e293b 1px, transparent 1px);
         }
 
         @keyframes soft-pulse {
@@ -32,196 +52,73 @@
             50% { transform: scale(1.02); outline: 3px solid #3b82f6; }
             100% { transform: scale(1); outline: 0px solid transparent; }
         }
+        .pulse-active { animation: soft-pulse 0.8s ease-in-out 3; z-index: 50 !important; position: relative; }
 
-        .pulse-active {
-            animation: soft-pulse 0.8s ease-in-out 3;
-            z-index: 50 !important;
-            position: relative;
-        }
-
-        .app-container { flex: 1; display: flex; overflow: hidden; background: #fff; }
-
-        .sidebar-container {
-            width: 320px;
-            background: #fff;
-            border-right: 1px solid #e2e8f0;
-            display: flex;
-            flex-direction: column;
-            z-index: 60;
-            transition: transform 0.2s ease, margin-left 0.2s ease;
-        }
+        .app-container { flex: 1; display: flex; overflow: hidden; }
+        .sidebar-container { width: 320px; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; z-index: 60; transition: transform 0.2s ease, margin-left 0.2s ease; }
         .sidebar-container.collapsed { transform: translateX(-100%); margin-left: -320px; }
-        .sidebar-scroll { flex: 1; overflow-y: auto; background: #fff; }
+        .sidebar-scroll { flex: 1; overflow-y: auto; }
 
-        .dashboard-row {
-            display: flex;
-            align-items: center;
-            padding: 6px 16px;
-            border-bottom: 1px solid #f1f5f9;
-            gap: 16px;
-            min-height: 48px;
-        }
-        .row-label {
-            font-size: 10px;
-            font-weight: 900;
-            color: #64748b;
-            width: 100px;
-            flex-shrink: 0;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
+        .dashboard-row { display: flex; align-items: center; padding: 6px 16px; border-bottom: 1px solid #f1f5f9; gap: 16px; min-height: 48px; }
+        .row-label { font-size: 10px; font-weight: 900; color: #64748b; width: 100px; flex-shrink: 0; text-transform: uppercase; }
         .row-items { display: flex; gap: 10px; overflow-x: auto; flex: 1; padding: 2px 0; }
-        .row-item-chip {
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 11px;
-            font-weight: 800;
-            white-space: nowrap;
-            cursor: pointer;
-            border: 1px solid #e2e8f0;
-            background: #fff;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        }
+        .row-item-chip { padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 800; white-space: nowrap; cursor: pointer; border: 1px solid #e2e8f0; background: #fff; }
+        .dark .row-item-chip { background: #334155; border-color: #475569; color: #fff; }
 
-        .gantt-viewport { flex: 1; overflow: auto; background: #fff; position: relative; }
+        .gantt-viewport { flex: 1; overflow: auto; position: relative; }
         .gantt-container { display: grid; grid-template-columns: var(--label-w) auto; min-width: max-content; }
-        .gantt-corner {
-            position: sticky; top: 0; left: 0; z-index: 100;
-            background: #1e293b; color: white; height: var(--header-h);
-            display: flex; align-items: center; padding: 0 16px;
-            font-size: 11px; font-weight: 800; text-transform: uppercase;
-            border-right: 1px solid #0f172a; border-bottom: 1px solid #0f172a;
-        }
+        .gantt-corner { position: sticky; top: 0; left: 0; z-index: 100; height: var(--header-h); display: flex; align-items: center; padding: 0 16px; font-size: 11px; font-weight: 800; text-transform: uppercase; color: #fff; }
 
-        .gantt-header-timeline {
-            position: sticky; top: 0; z-index: 90; height: var(--header-h);
-            display: flex; background: #f8fafc; border-bottom: 1px solid #cbd5e1;
-        }
-
-        .gantt-label-column {
-            position: sticky; left: 0; z-index: 80; background: #f8fafc;
-            width: var(--label-w); border-right: 1px solid #cbd5e1;
-        }
-
-        .gantt-label-cell {
-            height: 40px; display: flex; align-items: center; padding: 0 16px;
-            font-size: 12px; font-weight: 700; color: #334155;
-            background: #f8fafc; border-bottom: 1px solid #f1f5f9;
-            text-transform: uppercase;
-        }
-
-        .gantt-data-row {
-            height: 40px; position: relative;
-            background-image: 
-                linear-gradient(to right, #cbd5e1 1.5px, transparent 1.5px), 
-                linear-gradient(to right, #f1f5f9 1px, transparent 1px);
-            background-size: var(--day-w) 100%, var(--hour-w) 100%;
-            border-bottom: 1px solid #f1f5f9;
-        }
-
-        .day-info {
-            height: 30px; background: #f1f5f9; color: #475569;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 10px; font-weight: 800; border-bottom: 1px solid #cbd5e1;
-        }
-        .hour-tick {
-            width: var(--hour-w); flex-shrink: 0; border-right: 1px solid #f1f5f9;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 8px; font-weight: 700; color: #94a3b8;
-        }
-
-        .task-bar {
-            position: absolute; height: 32px; top: 4px; border-radius: 8px;
-            display: flex; align-items: center; padding: 0 12px;
-            font-size: 11px; font-weight: 800; color: #fff !important; 
-            z-index: 20; border: 1px solid rgba(0,0,0,0.15);
-            overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
-            cursor: pointer;
-        }
-        
+        .task-bar { position: absolute; height: 32px; top: 4px; border-radius: 8px; display: flex; align-items: center; padding: 0 12px; font-size: 11px; font-weight: 800; color: #fff !important; z-index: 20; border: 1px solid rgba(0,0,0,0.15); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; }
         .task-orange { background-color: #f59e0b; }
         .task-purple { background-color: #8b5cf6; }
         .task-red    { background-color: #10b981; }
 
-        .finder-dock {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            background: #1e293b; border: 1px solid rgba(255,255,255,0.1); padding: 8px 24px;
-            border-radius: 16px; display: flex; align-items: center; gap: 20px;
-            box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.4); z-index: 400;
-        }
+        .finder-dock { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #1e293b; border: 1px solid rgba(255,255,255,0.1); padding: 8px 24px; border-radius: 16px; display: flex; align-items: center; gap: 20px; box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.4); z-index: 400; }
+        .search-results { position: absolute; bottom: 100%; left: 0; width: 100%; background: white; border-radius: 12px; margin-bottom: 12px; max-height: 250px; overflow-y: auto; display: none; z-index: 501; border: 1px solid #e2e8f0; }
+        .dark .search-results { background: #1e293b; border-color: #334155; }
 
-        .search-results {
-            position: absolute; bottom: 100%; left: 0; width: 100%;
-            background: white; border-radius: 12px; margin-bottom: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15); max-height: 250px;
-            overflow-y: auto; display: none; z-index: 501;
-            border: 1px solid #e2e8f0;
-        }
-
-        .search-result-item {
-            padding: 12px 16px; font-size: 13px; border-bottom: 1px solid #f1f5f9;
-            cursor: pointer; color: #1e293b; font-weight: 600; display: flex; justify-content: space-between;
-        }
-
-        .filter-bubble {
-            padding: 4px 12px; border-radius: 8px; background: #f1f5f9;
-            color: #64748b; font-size: 10px; font-weight: 700;
-            cursor: pointer; border: 1px solid transparent; transition: background 0.1s;
-        }
+        .filter-bubble { padding: 4px 12px; border-radius: 8px; background: #f1f5f9; color: #64748b; font-size: 10px; font-weight: 700; cursor: pointer; }
+        .dark .filter-bubble { background: #334155; color: #94a3b8; }
         .filter-bubble.active { background: #1e293b; color: #fff; }
+        .dark .filter-bubble.active { background: #3b82f6; color: #fff; }
 
-        .modal-input {
-            background-color: #f8fafc !important; color: #1e293b !important;
-            border: 1px solid #e2e8f0 !important; padding: 12px !important;
-            font-weight: 600 !important; border-radius: 10px !important;
-        }
-
-        .team-toggle {
-            padding: 10px 16px; border-radius: 10px; border: 1px solid #e2e8f0;
-            background: #f8fafc; color: #64748b; font-size: 12px; font-weight: 700; cursor: pointer;
-        }
-        .team-toggle.active { background: #3b82f6; border-color: #3b82f6; color: white; }
-
-        .sidebar-card {
-            padding: 16px; border-bottom: 1px solid #f1f5f9;
-            position: relative; cursor: pointer; border-left-width: 5px;
-        }
-        .card-pending { border-left-color: #f59e0b; background: #fffaf5; }
-        .card-finished { border-left-color: #10b981; background: #f0fdf4; }
-        .card-reprogram { border-left-color: #94a3b8; background: #f8fafc; opacity: 0.6; }
-        
+        .sidebar-card { padding: 16px; border-bottom: 1px solid #f1f5f9; position: relative; cursor: pointer; border-left-width: 5px; }
+        .card-pending { border-left-color: #f59e0b; }
+        .card-finished { border-left-color: #10b981; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body>
+<body class="light">
 
     <header class="bg-white h-16 flex items-center justify-between px-6 z-[110] border-b border-slate-200">
         <div class="flex items-center gap-4">
-            <button onclick="toggleSidebar()" class="p-2 hover:bg-slate-100 rounded-xl text-slate-400">
+            <button onclick="toggleSidebar()" class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl text-slate-400">
                 <i data-lucide="menu" class="w-6 h-6"></i>
             </button>
             <div class="bg-orange-500 p-2 rounded-xl text-white shadow-sm">
                 <i data-lucide="hard-hat" class="w-5 h-5"></i>
             </div>
             <div>
-                <h1 class="text-xl font-bold tracking-tight text-slate-800 leading-none mb-1">Quintiq Elektro</h1>
-                <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest">Controle de Campo Bertioga</p>
+                <h1 class="text-xl font-bold tracking-tight text-slate-800 dark:text-white leading-none mb-1">Quintiq Elektro</h1>
+                <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest">Bertioga • SP</p>
             </div>
         </div>
         <div class="flex items-center gap-4">
-            <div class="flex gap-4 border-r border-slate-200 pr-6 mr-2">
-                <button onclick="syncDatabase()" class="text-slate-500 font-bold text-[10px] hover:text-blue-600 uppercase flex items-center gap-1">
-                    <i data-lucide="folder-sync" class="w-3 h-3"></i> Sincronizar DB
-                </button>
-            </div>
-            <button onclick="scrollToToday()" class="bg-slate-100 text-slate-700 px-5 py-2 rounded-xl font-bold text-[10px] border border-slate-200 hover:bg-slate-200">HOJE</button>
-            <button onclick="toggleModal('add')" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl font-bold text-xs uppercase shadow-lg active:scale-95">LANÇAR LOTE</button>
+            <button onclick="syncDatabase()" class="text-slate-500 dark:text-slate-400 font-bold text-[10px] hover:text-blue-600 uppercase flex items-center gap-1 bg-slate-100 dark:bg-slate-800 px-3 py-2 rounded-lg">
+                <i data-lucide="folder-sync" class="w-3 h-3"></i> Sincronizar DB
+            </button>
+            <button onclick="toggleModal('settings')" class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl text-slate-400">
+                <i data-lucide="settings" class="w-5 h-5"></i>
+            </button>
+            <button onclick="scrollToToday()" class="bg-blue-600 text-white px-5 py-2 rounded-xl font-bold text-[10px] hover:bg-blue-700 shadow-lg shadow-blue-200 dark:shadow-none">HOJE</button>
+            <button onclick="toggleModal('add')" class="bg-slate-800 dark:bg-blue-500 text-white px-6 py-2.5 rounded-xl font-bold text-xs uppercase active:scale-95">LANÇAR LOTE</button>
         </div>
     </header>
 
     <div class="app-container">
-        <aside id="sidebar" class="sidebar-container">
-            <div class="p-4 bg-white border-b border-slate-100">
+        <aside id="sidebar" class="sidebar-container bg-white">
+            <div class="p-4 border-b border-slate-100 dark:border-slate-700">
                 <div class="flex justify-between items-center mb-4 px-1">
                     <span class="text-[11px] font-bold text-slate-400 uppercase tracking-widest" id="sidebar-count">0 OBRAS</span>
                 </div>
@@ -231,19 +128,10 @@
         </aside>
 
         <main class="flex-1 flex flex-col overflow-hidden bg-white">
-            <div class="bg-white border-b border-slate-200 shadow-sm">
-                <div class="dashboard-row">
-                    <div class="row-label">Reprogramar</div>
-                    <div id="row-reprogram" class="row-items no-scrollbar"></div>
-                </div>
-                <div class="dashboard-row">
-                    <div class="row-label">Apontadas</div>
-                    <div id="row-finished" class="row-items no-scrollbar"></div>
-                </div>
-                <div class="dashboard-row">
-                    <div class="row-label">Pendentes</div>
-                    <div id="row-pending" class="row-items no-scrollbar"></div>
-                </div>
+            <div class="bg-white border-b border-slate-200 dark:border-slate-700 shadow-sm">
+                <div class="dashboard-row"><div class="row-label">Reprogramar</div><div id="row-reprogram" class="row-items no-scrollbar"></div></div>
+                <div class="dashboard-row"><div class="row-label">Apontadas</div><div id="row-finished" class="row-items no-scrollbar"></div></div>
+                <div class="dashboard-row"><div class="row-label">Pendentes</div><div id="row-pending" class="row-items no-scrollbar"></div></div>
             </div>
 
             <div class="gantt-viewport" id="gantt-scroll-parent">
@@ -258,24 +146,44 @@
     </div>
 
     <div class="finder-dock">
-        <input type="date" id="finder-date" onchange="scrollToDate(this.value)" class="bg-transparent border-none text-white text-[13px] font-bold outline-none cursor-pointer hover:text-blue-400">
+        <input type="date" id="finder-date" onchange="scrollToDate(this.value)" class="bg-transparent border-none text-white text-[13px] font-bold outline-none cursor-pointer">
         <div class="w-px h-6 bg-slate-700"></div>
         <div class="relative flex items-center">
             <i data-lucide="search" class="w-4 h-4 text-slate-500 mr-2"></i>
-            <input type="text" id="finder-work" oninput="handleWorkSearch(this.value)" placeholder="Localizar obra..." class="bg-transparent border-none text-white text-[14px] font-bold outline-none w-64 placeholder:text-slate-600">
+            <input type="text" id="finder-work" oninput="handleWorkSearch(this.value)" placeholder="Localizar obra..." class="bg-transparent border-none text-white text-[14px] font-bold outline-none w-64">
             <div id="search-results" class="search-results"></div>
         </div>
         <div id="current-date-display" class="text-[10px] font-bold text-blue-500 uppercase tracking-tighter ml-2"></div>
     </div>
 
     <div id="modal" class="fixed inset-0 bg-slate-900/60 hidden items-center justify-center z-[600] p-4 backdrop-blur-sm">
-        <div class="bg-white rounded-[28px] w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh] shadow-2xl border border-slate-200">
-            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-                <h3 id="modal-title" class="text-xl font-bold text-slate-800 uppercase italic">Lançamento</h3>
-                <button onclick="closeModal()"><i data-lucide="x" class="w-6 h-6 text-slate-400 hover:text-red-500"></i></button>
+        <div class="bg-white dark:bg-slate-900 rounded-[28px] w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh] shadow-2xl border border-slate-200 dark:border-slate-700">
+            <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
+                <h3 id="modal-title" class="text-xl font-bold text-slate-800 dark:text-white uppercase italic">Lançamento</h3>
+                <button onclick="closeModal()"><i data-lucide="x" class="w-6 h-6 text-slate-400"></i></button>
             </div>
-            <div class="p-8 overflow-y-auto flex-1 space-y-6">
-                <div class="grid grid-cols-2 gap-6 text-slate-800">
+            
+            <div id="modal-settings-content" class="p-8 hidden space-y-6">
+                <div class="bg-slate-50 dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700">
+                    <h4 class="text-sm font-black uppercase text-slate-400 mb-4">Aparência do Sistema</h4>
+                    <button onclick="toggleDarkMode()" class="w-full flex items-center justify-between bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
+                        <span class="font-bold text-slate-700 dark:text-slate-200">Tema Escuro</span>
+                        <div id="dark-toggle-ui" class="w-12 h-6 bg-slate-200 dark:bg-blue-500 rounded-full relative transition-colors">
+                            <div class="w-4 h-4 bg-white rounded-full absolute top-1 left-1 dark:left-7 transition-all"></div>
+                        </div>
+                    </button>
+                </div>
+                <div class="bg-slate-50 dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700">
+                    <h4 class="text-sm font-black uppercase text-slate-400 mb-4">Dados e Segurança</h4>
+                    <button onclick="exportData()" class="w-full bg-slate-800 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2">
+                        <i data-lucide="download" class="w-4 h-4"></i> EXPORTAR BACKUP MANUAL (.JSON)
+                    </button>
+                    <p class="text-[10px] text-slate-400 mt-3 text-center uppercase font-bold">Nota: O sistema já salva automaticamente se a sincronização estiver ativa.</p>
+                </div>
+            </div>
+
+            <div id="modal-main-content" class="p-8 overflow-y-auto flex-1 space-y-6">
+                <div class="grid grid-cols-2 gap-6">
                     <div class="col-span-2">
                         <label class="text-[11px] font-bold uppercase text-slate-400 mb-2 block px-1">Código da Obra</label>
                         <input type="text" id="m-code" class="w-full modal-input uppercase" placeholder="MR-00XXXXXX">
@@ -284,7 +192,6 @@
                         <label class="text-[11px] font-bold uppercase text-slate-400 mb-3 block px-1">Equipes</label>
                         <div id="team-toggles-container" class="flex flex-wrap gap-3"></div>
                     </div>
-                    
                     <div>
                         <label class="text-[11px] font-bold uppercase text-slate-400 mb-2 block px-1">Data</label>
                         <input type="date" id="m-date" class="w-full modal-input">
@@ -293,37 +200,37 @@
                         <label class="text-[11px] font-bold uppercase text-slate-400 mb-2 block px-1">Qtd US</label>
                         <input type="number" id="m-us" class="w-full modal-input" placeholder="0">
                     </div>
-
                     <div class="flex gap-4 col-span-2">
                         <div class="flex-1"><label class="text-[11px] font-bold uppercase text-slate-400 mb-2 block px-1">Início</label><input type="time" id="m-start" class="w-full modal-input"></div>
                         <div class="flex-1"><label class="text-[11px] font-bold uppercase text-slate-400 mb-2 block px-1">Fim</label><input type="time" id="m-end" class="w-full modal-input"></div>
                     </div>
                     <div class="col-span-2">
                         <label class="text-[11px] font-bold uppercase text-slate-400 mb-2 block px-1">Notas / Relatório</label>
-                        <textarea id="m-comment" class="w-full modal-input h-28 resize-none" placeholder="Relatório de campo opcional..."></textarea>
+                        <textarea id="m-comment" class="w-full modal-input h-28 resize-none" placeholder="Relatório..."></textarea>
                     </div>
                 </div>
-                <button id="modal-primary-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-2xl shadow-xl shadow-blue-200 transition-all">ADICIONAR À FILA</button>
-                <div id="batch-table-container" class="border border-slate-100 rounded-2xl bg-white mt-4 overflow-hidden shadow-sm">
+                <button id="modal-primary-btn" class="w-full bg-blue-600 text-white font-bold py-4 rounded-2xl shadow-xl transition-all">ADICIONAR À FILA</button>
+                <div id="batch-table-container" class="border border-slate-100 dark:border-slate-800 rounded-2xl bg-white dark:bg-slate-900 mt-4 overflow-hidden">
                     <table class="w-full">
-                        <thead class="bg-slate-50 border-b border-slate-100 text-[10px] uppercase text-slate-400 font-bold">
+                        <thead class="bg-slate-50 dark:bg-slate-800 border-b border-slate-100 dark:border-slate-700 text-[10px] uppercase text-slate-400 font-bold">
                             <tr><th class="p-4 text-left">Obra</th><th class="p-4 text-left">Equipe</th><th class="p-4 text-right">Ação</th></tr>
                         </thead>
                         <tbody id="temp-table" class="text-sm font-semibold"></tbody>
                     </table>
                 </div>
             </div>
-            <div class="p-8 bg-slate-50 border-t border-slate-100 flex gap-4">
-                <button onclick="closeModal()" class="flex-1 font-bold text-slate-400 uppercase text-xs">Cancelar</button>
-                <button id="modal-confirm-btn" onclick="finalize()" disabled class="flex-[2] bg-slate-800 hover:bg-black text-white py-4 rounded-2xl font-bold text-xs shadow-md">GRAVAR NO SISTEMA</button>
+
+            <div class="p-8 bg-slate-50 dark:bg-slate-800 border-t border-slate-100 dark:border-slate-700 flex gap-4">
+                <button onclick="closeModal()" class="flex-1 font-bold text-slate-400 uppercase text-xs">Fechar</button>
+                <button id="modal-confirm-btn" onclick="finalize()" disabled class="flex-[2] bg-slate-800 dark:bg-blue-500 text-white py-4 rounded-2xl font-bold text-xs">GRAVAR NO SISTEMA</button>
             </div>
         </div>
     </div>
 
     <div id="modal-overview" class="fixed inset-0 bg-slate-900/60 hidden items-center justify-center z-[700] p-4 backdrop-blur-sm">
-        <div class="bg-white rounded-[40px] w-full max-w-md overflow-hidden shadow-2xl border border-slate-100 transform scale-100">
+        <div class="bg-white dark:bg-slate-900 rounded-[40px] w-full max-w-md overflow-hidden shadow-2xl border border-slate-100 dark:border-slate-800">
             <div class="bg-[#1e293b] p-10 text-white relative">
-                <button onclick="closeOverview()" class="absolute top-8 right-8 text-slate-400 hover:text-white transition-colors"><i data-lucide="x" class="w-8 h-8"></i></button>
+                <button onclick="closeOverview()" class="absolute top-8 right-8 text-slate-400 hover:text-white"><i data-lucide="x" class="w-8 h-8"></i></button>
                 <div class="flex items-center gap-2 mb-3">
                     <div id="ov-status-dot" class="w-3 h-3 rounded-full bg-orange-500"></div>
                     <span id="ov-status-text" class="text-[11px] font-bold uppercase tracking-widest text-slate-400"></span>
@@ -331,40 +238,44 @@
                 <h2 id="ov-code" class="text-3xl font-bold italic tracking-tighter uppercase leading-none"></h2>
             </div>
             <div class="p-8 space-y-8">
-                <div class="grid grid-cols-3 gap-3 text-black">
-                    <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100 flex flex-col justify-center">
-                        <span class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Equipe</span>
-                        <span id="ov-teams-tags" class="text-xs font-bold text-slate-700 uppercase truncate"></span>
+                <div class="grid grid-cols-3 gap-3">
+                    <div class="bg-slate-50 dark:bg-slate-800 p-3 rounded-2xl border border-slate-100 dark:border-slate-700 flex flex-col justify-center">
+                        <span class="text-[9px] font-bold text-slate-400 uppercase mb-1">Equipe</span>
+                        <span id="ov-teams-tags" class="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase"></span>
                     </div>
-                    <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100 flex flex-col justify-center">
-                        <span class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Janela</span>
-                        <span id="ov-time" class="text-xs font-bold text-slate-700 truncate"></span>
+                    <div class="bg-slate-50 dark:bg-slate-800 p-3 rounded-2xl border border-slate-100 dark:border-slate-700 flex flex-col justify-center">
+                        <span class="text-[9px] font-bold text-slate-400 uppercase mb-1">Janela</span>
+                        <span id="ov-time" class="text-xs font-bold text-slate-700 dark:text-slate-300"></span>
                     </div>
-                    <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100 flex flex-col justify-center">
-                        <span class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Total US</span>
-                        <span id="ov-us" class="text-xs font-bold text-blue-600 truncate"></span>
+                    <div class="bg-slate-50 dark:bg-slate-800 p-3 rounded-2xl border border-slate-100 dark:border-slate-700 flex flex-col justify-center text-center">
+                        <span class="text-[9px] font-bold text-slate-400 uppercase mb-1">US</span>
+                        <span id="ov-us" class="text-xs font-bold text-blue-600 dark:text-blue-400"></span>
                     </div>
                 </div>
-                <div class="bg-blue-50 p-5 rounded-2xl border border-blue-100 text-black text-center"><span id="ov-date" class="text-lg font-bold text-blue-900 uppercase tracking-tight"></span></div>
-                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 min-h-[140px] text-black"><p id="ov-comment" class="text-sm font-semibold italic text-slate-600 leading-relaxed"></p></div>
+                <div class="bg-blue-50 dark:bg-blue-900/30 p-5 rounded-2xl border border-blue-100 dark:border-blue-800 text-center">
+                    <span id="ov-date" class="text-lg font-bold text-blue-900 dark:text-blue-200 uppercase tracking-tight"></span>
+                </div>
+                <div class="bg-slate-50 dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 min-h-[140px]">
+                    <p id="ov-comment" class="text-sm font-semibold italic text-slate-600 dark:text-slate-400 leading-relaxed"></p>
+                </div>
                 <div class="grid grid-cols-3 gap-3">
-                    <button id="ov-edit-btn" class="bg-slate-100 border border-slate-200 py-4 rounded-2xl font-bold text-[10px] uppercase text-slate-600">EDITAR</button>
-                    <button id="ov-repro-btn" class="bg-orange-100 border border-orange-200 text-orange-800 py-4 rounded-2xl font-bold text-[10px] uppercase">REPROG.</button>
-                    <button id="ov-toggle-btn" class="flex-[2] bg-blue-600 text-white py-4 rounded-2xl font-bold uppercase text-[10px] shadow-lg shadow-blue-200"></button>
+                    <button id="ov-edit-btn" class="bg-slate-100 dark:bg-slate-800 dark:text-slate-300 py-4 rounded-2xl font-bold text-[10px] uppercase">EDITAR</button>
+                    <button id="ov-repro-btn" class="bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300 py-4 rounded-2xl font-bold text-[10px] uppercase">REPROG.</button>
+                    <button id="ov-toggle-btn" class="flex-[2] bg-blue-600 text-white py-4 rounded-2xl font-bold uppercase text-[10px]"></button>
                 </div>
             </div>
         </div>
     </div>
 
     <div id="modal-status" class="fixed inset-0 bg-slate-900/60 hidden items-center justify-center z-[800] p-4 backdrop-blur-sm">
-        <div class="bg-white rounded-[40px] w-full max-w-sm overflow-hidden shadow-2xl border border-slate-200">
+        <div class="bg-white dark:bg-slate-900 rounded-[40px] w-full max-w-sm overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-700">
             <div class="p-10 space-y-6 text-center">
-                <h3 id="status-modal-title" class="text-2xl font-bold text-slate-800 uppercase tracking-tight">Confirmar</h3>
-                <p id="status-modal-desc" class="text-[12px] font-bold text-slate-500 uppercase tracking-widest leading-relaxed"></p>
-                <textarea id="status-m-comment" placeholder="Breve nota de encerramento..." class="w-full modal-input h-32 text-center"></textarea>
+                <h3 id="status-modal-title" class="text-2xl font-bold text-slate-800 dark:text-white uppercase tracking-tight">Confirmar</h3>
+                <p id="status-modal-desc" class="text-[12px] font-bold text-slate-500 uppercase tracking-widest"></p>
+                <textarea id="status-m-comment" placeholder="Nota final..." class="w-full modal-input h-32 text-center"></textarea>
                 <div class="flex gap-4">
-                    <button onclick="closeStatusModal()" class="flex-1 font-bold text-slate-400 text-xs uppercase transition-colors">Voltar</button>
-                    <button id="status-confirm-btn" class="flex-[2] bg-blue-600 text-white py-5 rounded-[20px] font-bold uppercase text-xs shadow-lg shadow-blue-200">Confirmar</button>
+                    <button onclick="closeStatusModal()" class="flex-1 font-bold text-slate-400 text-xs uppercase">Voltar</button>
+                    <button id="status-confirm-btn" class="flex-[2] bg-blue-600 text-white py-5 rounded-[20px] font-bold uppercase text-xs">Confirmar</button>
                 </div>
             </div>
         </div>
@@ -381,18 +292,29 @@
         let fileHandle = null; let editingId = null; let tempItems = []; let activeFilter = 'all'; let collapsedDates = new Set();
         let currentZoom = 35;
 
-        // --- FILE SYSTEM SYNC ---
+        // --- DARK MODE LOGIC ---
+        function toggleDarkMode() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        }
+
+        // --- FILE SYSTEM ---
         async function syncDatabase() {
             try {
-                [fileHandle] = await window.showOpenFilePicker({
-                    types: [{ description: 'Banco de Dados JSON', accept: { 'application/json': ['.json'] } }],
-                });
+                [fileHandle] = await window.showOpenFilePicker({ types: [{ description: 'JSON DB', accept: { 'application/json': ['.json'] } }] });
                 const file = await fileHandle.getFile();
                 const contents = await file.text();
                 works = contents ? JSON.parse(contents) : [];
                 saveData(); render();
-                alert("Sincronizado com o arquivo local!");
+                alert("Database Sincronizada!");
             } catch (e) { console.log("Cancelado"); }
+        }
+
+        function exportData() {
+            const blob = new Blob([JSON.stringify(works, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = `backup_elektro_${Date.now()}.json`; a.click();
         }
 
         async function saveData() {
@@ -402,15 +324,17 @@
                     const writable = await fileHandle.createWritable();
                     await writable.write(JSON.stringify(works, null, 2));
                     await writable.close();
-                } catch (e) { console.error("Erro ao escrever no arquivo", e); }
+                } catch (e) { console.error("Erro escrita", e); }
             }
         }
 
+        // --- HELPERS ---
         function isoToBR(iso) { if(!iso) return ''; const [y, m, d] = iso.split('-'); return `${d}/${m}/${y}`; }
         function getDaysSinceStart(iso) { if(!iso) return 0; const [y, m, d] = iso.split('-').map(Number); return Math.round((new Date(y, m-1, d).getTime() - START_TS)/MS_PER_DAY); }
         function getISODateLocal() { const n = new Date(); return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}-${String(n.getDate()).padStart(2,'0')}`; }
 
         function init() {
+            if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
             lucide.createIcons();
             applyZoom();
             const fDate = document.getElementById('finder-date');
@@ -431,8 +355,8 @@
             for (let i = 0; i < totalDays; i++) {
                 const dObj = new Date(START_TS + (i * MS_PER_DAY));
                 const group = document.createElement('div');
-                group.className = 'day-group';
-                group.innerHTML = `<div class="day-info">${WEEKDAYS[dObj.getDay()].substring(0,3)} ${String(dObj.getDate()).padStart(2,'0')}/${String(dObj.getMonth()+1).padStart(2,'0')}</div><div class="flex h-[30px]">${[0,6,12,18].map(h=>`<div class="hour-tick" style="width:${currentZoom*6}px">${h.toString().padStart(2,'0')}</div>`).join('')}</div>`;
+                group.className = 'day-group flex-shrink-0';
+                group.innerHTML = `<div class="day-info h-[30px] flex items-center justify-center font-bold text-[10px] border-b border-r">${WEEKDAYS[dObj.getDay()].substring(0,3)} ${String(dObj.getDate()).padStart(2,'0')}/${String(dObj.getMonth()+1).padStart(2,'0')}</div><div class="flex h-[30px]">${[0,6,12,18].map(h=>`<div class="hour-tick flex items-center justify-center text-[8px] font-bold border-r" style="width:${currentZoom*6}px">${h.toString().padStart(2,'0')}h</div>`).join('')}</div>`;
                 header.appendChild(group);
             }
             document.getElementById('timeline-grid').style.width = `calc(var(--day-w) * ${totalDays})`;
@@ -462,15 +386,15 @@
             labels.innerHTML = ''; grid.innerHTML = ''; list.innerHTML = '';
             generateFilterBubbles();
 
-            // Dashboards superiores
-            const renderChips = (containerId, filterFn, colorClass) => {
-                const container = document.getElementById(containerId);
-                const items = works.filter(filterFn);
-                container.innerHTML = items.length ? items.map(w => `<div onclick="scrollToDate('${w.date}', '${w.start}'); triggerPulse('${w.id}')" class="row-item-chip ${colorClass} uppercase">${w.code}</div>`).join('') : '<span class="text-[9px] text-slate-300 italic px-2">Vazio</span>';
+            // Dashboards
+            const renderChips = (id, fn, cl) => {
+                const c = document.getElementById(id);
+                const items = works.filter(fn);
+                c.innerHTML = items.length ? items.map(w => `<div onclick="scrollToDate('${w.date}', '${w.start}'); triggerPulse('${w.id}')" class="row-item-chip ${cl} uppercase">${w.code}</div>`).join('') : '<span class="text-[9px] text-slate-300 italic px-2">Vazio</span>';
             };
-            renderChips('row-reprogram', w => w.status === 'reprogramar', 'border-l-slate-400 border-l-4');
-            renderChips('row-finished', w => w.status === 'finished', 'border-l-emerald-400 border-l-4');
-            renderChips('row-pending', w => w.status === 'pending', 'border-l-orange-400 border-l-4');
+            renderChips('row-reprogram', w => w.status === 'reprogramar', 'border-l-slate-400');
+            renderChips('row-finished', w => w.status === 'finished', 'border-l-emerald-400');
+            renderChips('row-pending', w => w.status === 'pending', 'border-l-orange-400');
 
             document.getElementById('sidebar-count').innerText = `${works.length} OBRAS`;
 
@@ -485,26 +409,25 @@
 
             Object.keys(grouped).sort().forEach(d => {
                 const header = document.createElement('div');
-                header.className = 'date-drawer-header bg-slate-50 p-3 border-b border-slate-100 flex justify-between cursor-pointer font-bold text-slate-500 text-[11px]';
+                header.className = 'sidebar-card bg-slate-50 dark:bg-slate-800/50 flex justify-between font-bold text-slate-500 text-[10px] py-2 px-4 border-b dark:border-slate-700';
                 header.onclick = () => toggleDrawer(d);
-                header.innerHTML = `<span>📅 ${isoToBR(d)}</span><span>${grouped[d].length}</span>`;
+                header.innerHTML = `<span>📅 ${isoToBR(d)}</span><span>${grouped[d].length} OBRAS</span>`;
                 list.appendChild(header);
 
                 if(!collapsedDates.has(d)) {
                     grouped[d].forEach(w => {
                         const card = document.createElement('div');
-                        const stCl = w.status==='pending'?'card-pending':(w.status==='finished'?'card-finished':'card-reprogram');
-                        card.className = `sidebar-card ${stCl}`;
+                        card.className = `sidebar-card ${w.status==='pending'?'card-pending':'card-finished'}`;
                         card.onclick = () => { scrollToDate(w.date, w.start); triggerPulse(w.id); };
                         card.innerHTML = `<div class="flex justify-between items-start group">
                             <div class="flex-1">
-                                <p class="text-slate-800 font-extrabold text-sm uppercase">${w.code}</p>
+                                <p class="text-slate-800 dark:text-slate-200 font-extrabold text-sm uppercase">${w.code}</p>
                                 <p class="text-[10px] font-bold text-slate-400 uppercase">${w.start} - ${w.team}</p>
-                                ${w.us ? `<p class="text-[10px] font-black text-blue-500 mt-1">${w.us} US</p>` : ''}
+                                ${w.us ? `<p class="text-[10px] font-black text-blue-500 dark:text-blue-400 mt-1">${w.us} US</p>` : ''}
                             </div>
                             <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button onclick="toggleWork(${w.id},'${w.code}',event)" class="bg-white p-2 border border-slate-100 rounded-lg text-emerald-500 shadow-sm"><i data-lucide="check" class="w-4 h-4"></i></button>
-                                <button onclick="toggleModal('edit',${w.id})" class="bg-white p-2 border border-slate-100 rounded-lg text-slate-400 shadow-sm"><i data-lucide="pencil" class="w-4 h-4"></i></button>
+                                <button onclick="toggleWork(${w.id},'${w.code}',event)" class="bg-white dark:bg-slate-700 p-2 border dark:border-slate-600 rounded-lg text-emerald-500"><i data-lucide="check" class="w-4 h-4"></i></button>
+                                <button onclick="toggleModal('edit',${w.id})" class="bg-white dark:bg-slate-700 p-2 border dark:border-slate-600 rounded-lg text-slate-400"><i data-lucide="pencil" class="w-4 h-4"></i></button>
                             </div>
                         </div>`;
                         list.appendChild(card);
@@ -520,11 +443,11 @@
                     if(diff >= 0) {
                         const [sh, sm] = item.start.split(':').map(Number);
                         const [eh, em] = item.end.split(':').map(Number);
-                        const left = (diff * 24 * currentZoom) + ((sh + sm/60) * currentZoom);
-                        const width = ((eh+em/60)-(sh+sm/60)) * currentZoom;
+                        const l = (diff * 24 * currentZoom) + ((sh + sm/60) * currentZoom);
+                        const w = ((eh+em/60)-(sh+sm/60)) * currentZoom;
                         const block = document.createElement('div');
                         block.className = `task-bar ${item.status==='finished'?'task-red':(t==='BB30'?'task-orange':'task-purple')}`;
-                        block.id = `task-${item.id}`; block.style.left = `${left}px`; block.style.width = `${Math.max(width, 40)}px`;
+                        block.id = `task-${item.id}`; block.style.left = `${l}px`; block.style.width = `${Math.max(w, 40)}px`;
                         block.innerHTML = `<span class="truncate">${item.code}</span>`; 
                         block.onclick = (e) => { e.stopPropagation(); openOverview(item.id); };
                         row.appendChild(block);
@@ -536,45 +459,58 @@
         }
 
         function generateFilterBubbles() {
-            const container = document.getElementById('filter-bubbles-container');
+            const c = document.getElementById('filter-bubbles-container');
             const btns = [{id:'all',l:'Todas'},{id:'finished',l:'Apontadas'},{id:'pending',l:'Aguardando'}];
-            container.innerHTML = btns.map(b => `<div onclick="setActiveFilter('${b.id}')" class="filter-bubble ${activeFilter===b.id?'active':''}">${b.l}</div>`).join('') + `<div class="w-px h-5 bg-slate-100 mx-1 flex-shrink-0"></div>` + TEAMS.map(t => `<div onclick="setActiveFilter('${t}')" class="filter-bubble ${activeFilter===t?'active':''}">${t}</div>`).join('');
+            c.innerHTML = btns.map(b => `<div onclick="setActiveFilter('${b.id}')" class="filter-bubble ${activeFilter===b.id?'active':''}">${b.l}</div>`).join('') + `<div class="w-px h-5 bg-slate-100 dark:bg-slate-700 mx-1 flex-shrink-0"></div>` + TEAMS.map(t => `<div onclick="setActiveFilter('${t}')" class="filter-bubble ${activeFilter===t?'active':''}">${t}</div>`).join('');
         }
 
         window.toggleModal = function(mode='add', id=null) {
             const m = document.getElementById('modal');
-            m.classList.replace('hidden', 'flex');
+            const mainContent = document.getElementById('modal-main-content');
+            const settingsContent = document.getElementById('modal-settings-content');
             const btnPrimary = document.getElementById('modal-primary-btn');
             const batchTable = document.getElementById('batch-table-container');
+            const btnConfirm = document.getElementById('modal-confirm-btn');
 
-            if(mode==='edit') {
-                const item = works.find(w=>w.id == id); editingId = id;
-                document.getElementById('m-code').value = item.code;
-                document.getElementById('m-date').value = item.date;
-                document.getElementById('m-us').value = item.us || '';
-                document.getElementById('m-start').value = item.start;
-                document.getElementById('m-end').value = item.end;
-                document.getElementById('m-comment').value = item.comment || '';
-                generateTeamToggles([item.team]);
-                document.getElementById('modal-title').innerText = "Editar Obra";
-                btnPrimary.innerText = "SALVAR ALTERAÇÕES";
-                btnPrimary.onclick = saveEdit;
-                document.getElementById('modal-confirm-btn').style.display = "none";
-                batchTable.classList.add('hidden');
+            m.classList.replace('hidden', 'flex');
+            mainContent.classList.add('hidden'); settingsContent.classList.add('hidden');
+
+            if (mode === 'settings') {
+                document.getElementById('modal-title').innerText = "Configurações";
+                settingsContent.classList.remove('hidden');
+                btnConfirm.style.display = "none";
             } else {
-                editingId = null; tempItems = [];
-                document.getElementById('m-code').value = '';
-                document.getElementById('m-date').value = getISODateLocal();
-                document.getElementById('m-us').value = '';
-                document.getElementById('m-comment').value = '';
-                generateTeamToggles(["BB30"]);
-                document.getElementById('modal-title').innerText = "Lançamento";
-                btnPrimary.innerText = "ADICIONAR À FILA";
-                btnPrimary.onclick = addItem;
-                document.getElementById('modal-confirm-btn').style.display = "block";
-                batchTable.classList.remove('hidden');
-                updateTempList();
+                mainContent.classList.remove('hidden');
+                btnConfirm.style.display = "block";
+                if(mode==='edit') {
+                    const item = works.find(w=>w.id == id); editingId = id;
+                    document.getElementById('m-code').value = item.code;
+                    document.getElementById('m-date').value = item.date;
+                    document.getElementById('m-us').value = item.us || '';
+                    document.getElementById('m-start').value = item.start;
+                    document.getElementById('m-end').value = item.end;
+                    document.getElementById('m-comment').value = item.comment || '';
+                    generateTeamToggles([item.team]);
+                    document.getElementById('modal-title').innerText = "Editar Obra";
+                    btnPrimary.innerText = "SALVAR ALTERAÇÕES";
+                    btnPrimary.onclick = saveEdit;
+                    btnConfirm.style.display = "none";
+                    batchTable.classList.add('hidden');
+                } else {
+                    editingId = null; tempItems = [];
+                    document.getElementById('m-code').value = '';
+                    document.getElementById('m-date').value = getISODateLocal();
+                    document.getElementById('m-us').value = '';
+                    document.getElementById('m-comment').value = '';
+                    generateTeamToggles(["BB30"]);
+                    document.getElementById('modal-title').innerText = "Lançamento";
+                    btnPrimary.innerText = "ADICIONAR À FILA";
+                    btnPrimary.onclick = addItem;
+                    batchTable.classList.remove('hidden');
+                    updateTempList();
+                }
             }
+            lucide.createIcons();
         };
 
         window.saveEdit = function() {
@@ -603,8 +539,8 @@
         };
 
         window.updateTempList = function() {
-            const tempTable = document.getElementById('temp-table');
-            tempTable.innerHTML = tempItems.map(item => `<tr class="border-b border-slate-50"><td class="p-3 font-bold text-slate-800">${item.code}</td><td class="p-3 font-bold text-blue-500">${item.team}</td><td class="p-3 text-right"><button onclick="tempItems=tempItems.filter(x=>x.id!==${item.id});updateTempList();" class="text-red-300 hover:text-red-500 font-black">X</button></td></tr>`).join('');
+            const t = document.getElementById('temp-table');
+            t.innerHTML = tempItems.map(item => `<tr class="border-b dark:border-slate-800"><td class="p-3 font-bold dark:text-slate-200">${item.code}</td><td class="p-3 font-bold text-blue-500">${item.team}</td><td class="p-3 text-right"><button onclick="tempItems=tempItems.filter(x=>x.id!==${item.id});updateTempList();" class="text-red-400">Remover</button></td></tr>`).join('');
             document.getElementById('modal-confirm-btn').disabled = tempItems.length === 0;
         };
 
@@ -619,8 +555,6 @@
             if(w.status==='finished') { works=works.map(x=>x.id==id?{...x,status:'pending'}:x); saveData(); render(); }
             else openStatusModal(id, 'finished', `Finalizar ${code}`);
         };
-
-        window.setReprogramar = function(id, code) { openStatusModal(id, 'reprogramar', `Reprogramar ${code}`); };
 
         window.openStatusModal = function(id, st, desc) {
             document.getElementById('modal-status').classList.replace('hidden', 'flex');
@@ -639,23 +573,20 @@
             document.getElementById('ov-us').innerText = item.us ? `${item.us} US` : '--';
             document.getElementById('ov-comment').innerText = item.comment || "Sem notas registradas.";
             document.getElementById('ov-teams-tags').innerText = item.team;
-            
-            const [y, m_iso, d] = item.date.split('-');
-            const dObj = new Date(y, m_iso-1, d);
-            document.getElementById('ov-date').innerText = `${WEEKDAYS[dObj.getDay()]}, ${d}/${m_iso}/${y}`;
-
+            const [y, m, d] = item.date.split('-');
+            const dObj = new Date(y, m-1, d);
+            document.getElementById('ov-date').innerText = `${WEEKDAYS[dObj.getDay()]}, ${d}/${m}/${y}`;
             const btn = document.getElementById('ov-toggle-btn');
             const btnRepro = document.getElementById('ov-repro-btn');
             const txt = document.getElementById('ov-status-text');
             const dot = document.getElementById('ov-status-dot');
-            
             if (item.status === 'finished') { dot.style.backgroundColor = "#10b981"; txt.innerText = "Apontada"; btn.innerText = "REVERTER"; btnRepro.classList.add('hidden'); }
             else { dot.style.backgroundColor = "#f97316"; txt.innerText = "Pendente"; btn.innerText = "FINALIZAR"; btnRepro.classList.remove('hidden'); }
-            
             document.getElementById('ov-edit-btn').onclick = () => { closeOverview(); toggleModal('edit', id); };
             btnRepro.onclick = () => { closeOverview(); setReprogramar(id, item.code); };
             btn.onclick = () => { closeOverview(); toggleWork(id, item.code); };
             document.getElementById('modal-overview').classList.replace('hidden', 'flex');
+            lucide.createIcons();
         };
 
         window.handleWorkSearch = function(q) {
@@ -673,6 +604,7 @@
         window.closeOverview = function() { document.getElementById('modal-overview').classList.replace('flex', 'hidden'); };
         window.closeStatusModal = function() { document.getElementById('modal-status').classList.replace('flex', 'hidden'); };
         window.closeModal = function() { document.getElementById('modal').classList.replace('flex', 'hidden'); };
+        window.setReprogramar = function(id, code) { openStatusModal(id, 'reprogramar', `Reprogramar ${code}`); };
 
         window.onload = init;
     </script>
