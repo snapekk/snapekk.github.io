@@ -27,7 +27,6 @@
             color: #1e293b;
         }
 
-        /* ANIMAÇÃO DE HIGHLIGHT OTIMIZADA */
         @keyframes soft-pulse {
             0% { transform: scale(1); outline: 0px solid transparent; }
             50% { transform: scale(1.02); outline: 3px solid #3b82f6; }
@@ -40,15 +39,8 @@
             position: relative;
         }
 
-        /* LAYOUT PRINCIPAL */
-        .app-container {
-            flex: 1;
-            display: flex;
-            overflow: hidden;
-            background: #fff;
-        }
+        .app-container { flex: 1; display: flex; overflow: hidden; background: #fff; }
 
-        /* SIDEBAR DINÂMICA */
         .sidebar-container {
             width: 320px;
             background: #fff;
@@ -58,13 +50,9 @@
             z-index: 60;
             transition: transform 0.2s ease, margin-left 0.2s ease;
         }
-        .sidebar-container.collapsed {
-            transform: translateX(-100%);
-            margin-left: -320px;
-        }
+        .sidebar-container.collapsed { transform: translateX(-100%); margin-left: -320px; }
         .sidebar-scroll { flex: 1; overflow-y: auto; background: #fff; }
 
-        /* RELATÓRIO DE 3 LINHAS */
         .dashboard-row {
             display: flex;
             align-items: center;
@@ -82,13 +70,7 @@
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
-        .row-items {
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            flex: 1;
-            padding: 2px 0;
-        }
+        .row-items { display: flex; gap: 10px; overflow-x: auto; flex: 1; padding: 2px 0; }
         .row-item-chip {
             padding: 6px 12px;
             border-radius: 8px;
@@ -100,22 +82,9 @@
             background: #fff;
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
-        .row-item-chip:active { background: #f8fafc; }
 
-        /* GANTT */
-        .gantt-viewport {
-            flex: 1;
-            overflow: auto;
-            background: #fff;
-            position: relative;
-        }
-
-        .gantt-container {
-            display: grid;
-            grid-template-columns: var(--label-w) auto;
-            min-width: max-content;
-        }
-
+        .gantt-viewport { flex: 1; overflow: auto; background: #fff; position: relative; }
+        .gantt-container { display: grid; grid-template-columns: var(--label-w) auto; min-width: max-content; }
         .gantt-corner {
             position: sticky; top: 0; left: 0; z-index: 100;
             background: #1e293b; color: white; height: var(--header-h);
@@ -161,22 +130,19 @@
             font-size: 8px; font-weight: 700; color: #94a3b8;
         }
 
-        /* BARRAS DE OBRA - CONTRASTE EQUILIBRADO */
         .task-bar {
             position: absolute; height: 32px; top: 4px; border-radius: 8px;
             display: flex; align-items: center; padding: 0 12px;
             font-size: 11px; font-weight: 800; color: #fff !important; 
             z-index: 20; border: 1px solid rgba(0,0,0,0.15);
             overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
-            cursor: pointer; pointer-events: auto;
+            cursor: pointer;
         }
-        .task-bar:hover { filter: brightness(1.05); }
         
         .task-orange { background-color: #f59e0b; }
         .task-purple { background-color: #8b5cf6; }
         .task-red    { background-color: #10b981; }
 
-        /* DOCK DE BUSCA NO RODAPÉ */
         .finder-dock {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
             background: #1e293b; border: 1px solid rgba(255,255,255,0.1); padding: 8px 24px;
@@ -194,9 +160,8 @@
 
         .search-result-item {
             padding: 12px 16px; font-size: 13px; border-bottom: 1px solid #f1f5f9;
-            cursor: pointer; color: #1e293b; font-weight: 600;
+            cursor: pointer; color: #1e293b; font-weight: 600; display: flex; justify-content: space-between;
         }
-        .search-result-item:hover { background: #f8fafc; }
 
         .filter-bubble {
             padding: 4px 12px; border-radius: 8px; background: #f1f5f9;
@@ -205,25 +170,17 @@
         }
         .filter-bubble.active { background: #1e293b; color: #fff; }
 
-        /* INPUTS E BOTÕES FIX LAG */
         .modal-input {
             background-color: #f8fafc !important; color: #1e293b !important;
             border: 1px solid #e2e8f0 !important; padding: 12px !important;
             font-weight: 600 !important; border-radius: 10px !important;
         }
-        .modal-input:focus { border-color: #3b82f6 !important; background: #fff !important; outline: none; }
 
         .team-toggle {
             padding: 10px 16px; border-radius: 10px; border: 1px solid #e2e8f0;
             background: #f8fafc; color: #64748b; font-size: 12px; font-weight: 700; cursor: pointer;
         }
         .team-toggle.active { background: #3b82f6; border-color: #3b82f6; color: white; }
-
-        .date-drawer-header {
-            background-color: #f8fafc; color: #64748b; padding: 12px 16px;
-            display: flex; justify-content: space-between; align-items: center;
-            cursor: pointer; position: sticky; top: 0; z-index: 10; border-bottom: 1px solid #f1f5f9;
-        }
 
         .sidebar-card {
             padding: 16px; border-bottom: 1px solid #f1f5f9;
@@ -233,14 +190,11 @@
         .card-finished { border-left-color: #10b981; background: #f0fdf4; }
         .card-reprogram { border-left-color: #94a3b8; background: #f8fafc; opacity: 0.6; }
         
-        .obra-code-text { color: #1e293b; font-size: 15px; font-weight: 800; }
-
         .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body>
 
-    <!-- HEADER SUPERIOR -->
     <header class="bg-white h-16 flex items-center justify-between px-6 z-[110] border-b border-slate-200">
         <div class="flex items-center gap-4">
             <button onclick="toggleSidebar()" class="p-2 hover:bg-slate-100 rounded-xl text-slate-400">
@@ -256,9 +210,9 @@
         </div>
         <div class="flex items-center gap-4">
             <div class="flex gap-4 border-r border-slate-200 pr-6 mr-2">
-                <button onclick="exportData()" class="text-slate-500 font-bold text-[10px] hover:text-blue-600 uppercase">Exportar</button>
-                <button onclick="document.getElementById('import-input').click()" class="text-slate-500 font-bold text-[10px] hover:text-orange-600 uppercase">Importar</button>
-                <input type="file" id="import-input" class="hidden" accept=".txt,.json" onchange="importData(event)">
+                <button onclick="syncDatabase()" class="text-slate-500 font-bold text-[10px] hover:text-blue-600 uppercase flex items-center gap-1">
+                    <i data-lucide="folder-sync" class="w-3 h-3"></i> Sincronizar DB
+                </button>
             </div>
             <button onclick="scrollToToday()" class="bg-slate-100 text-slate-700 px-5 py-2 rounded-xl font-bold text-[10px] border border-slate-200 hover:bg-slate-200">HOJE</button>
             <button onclick="toggleModal('add')" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl font-bold text-xs uppercase shadow-lg active:scale-95">LANÇAR LOTE</button>
@@ -266,7 +220,6 @@
     </header>
 
     <div class="app-container">
-        <!-- SIDEBAR -->
         <aside id="sidebar" class="sidebar-container">
             <div class="p-4 bg-white border-b border-slate-100">
                 <div class="flex justify-between items-center mb-4 px-1">
@@ -277,9 +230,7 @@
             <div id="sidebar-list" class="sidebar-scroll"></div>
         </aside>
 
-        <!-- ÁREA CENTRAL -->
         <main class="flex-1 flex flex-col overflow-hidden bg-white">
-            <!-- DASHBOARD DE 3 LINHAS -->
             <div class="bg-white border-b border-slate-200 shadow-sm">
                 <div class="dashboard-row">
                     <div class="row-label">Reprogramar</div>
@@ -306,7 +257,6 @@
         </main>
     </div>
 
-    <!-- DOCK DE BUSCA -->
     <div class="finder-dock">
         <input type="date" id="finder-date" onchange="scrollToDate(this.value)" class="bg-transparent border-none text-white text-[13px] font-bold outline-none cursor-pointer hover:text-blue-400">
         <div class="w-px h-6 bg-slate-700"></div>
@@ -318,14 +268,13 @@
         <div id="current-date-display" class="text-[10px] font-bold text-blue-500 uppercase tracking-tighter ml-2"></div>
     </div>
 
-    <!-- MODAL PRINCIPAL -->
     <div id="modal" class="fixed inset-0 bg-slate-900/60 hidden items-center justify-center z-[600] p-4 backdrop-blur-sm">
         <div class="bg-white rounded-[28px] w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh] shadow-2xl border border-slate-200">
             <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
                 <h3 id="modal-title" class="text-xl font-bold text-slate-800 uppercase italic">Lançamento</h3>
                 <button onclick="closeModal()"><i data-lucide="x" class="w-6 h-6 text-slate-400 hover:text-red-500"></i></button>
             </div>
-            <div class="p-8 overflow-y-auto flex-1 space-y-8">
+            <div class="p-8 overflow-y-auto flex-1 space-y-6">
                 <div class="grid grid-cols-2 gap-6 text-slate-800">
                     <div class="col-span-2">
                         <label class="text-[11px] font-bold uppercase text-slate-400 mb-2 block px-1">Código da Obra</label>
@@ -335,11 +284,17 @@
                         <label class="text-[11px] font-bold uppercase text-slate-400 mb-3 block px-1">Equipes</label>
                         <div id="team-toggles-container" class="flex flex-wrap gap-3"></div>
                     </div>
+                    
                     <div>
                         <label class="text-[11px] font-bold uppercase text-slate-400 mb-2 block px-1">Data</label>
                         <input type="date" id="m-date" class="w-full modal-input">
                     </div>
-                    <div class="flex gap-4">
+                    <div>
+                        <label class="text-[11px] font-bold uppercase text-slate-400 mb-2 block px-1">Qtd US</label>
+                        <input type="number" id="m-us" class="w-full modal-input" placeholder="0">
+                    </div>
+
+                    <div class="flex gap-4 col-span-2">
                         <div class="flex-1"><label class="text-[11px] font-bold uppercase text-slate-400 mb-2 block px-1">Início</label><input type="time" id="m-start" class="w-full modal-input"></div>
                         <div class="flex-1"><label class="text-[11px] font-bold uppercase text-slate-400 mb-2 block px-1">Fim</label><input type="time" id="m-end" class="w-full modal-input"></div>
                     </div>
@@ -348,7 +303,7 @@
                         <textarea id="m-comment" class="w-full modal-input h-28 resize-none" placeholder="Relatório de campo opcional..."></textarea>
                     </div>
                 </div>
-                <button id="modal-primary-btn" onclick="addItem()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-2xl shadow-xl shadow-blue-200 transition-all">ADICIONAR À FILA</button>
+                <button id="modal-primary-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-2xl shadow-xl shadow-blue-200 transition-all">ADICIONAR À FILA</button>
                 <div id="batch-table-container" class="border border-slate-100 rounded-2xl bg-white mt-4 overflow-hidden shadow-sm">
                     <table class="w-full">
                         <thead class="bg-slate-50 border-b border-slate-100 text-[10px] uppercase text-slate-400 font-bold">
@@ -365,7 +320,6 @@
         </div>
     </div>
 
-    <!-- OVERVIEW -->
     <div id="modal-overview" class="fixed inset-0 bg-slate-900/60 hidden items-center justify-center z-[700] p-4 backdrop-blur-sm">
         <div class="bg-white rounded-[40px] w-full max-w-md overflow-hidden shadow-2xl border border-slate-100 transform scale-100">
             <div class="bg-[#1e293b] p-10 text-white relative">
@@ -377,9 +331,19 @@
                 <h2 id="ov-code" class="text-3xl font-bold italic tracking-tighter uppercase leading-none"></h2>
             </div>
             <div class="p-8 space-y-8">
-                <div class="grid grid-cols-2 gap-5 text-black">
-                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100"><span class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Equipe</span><span id="ov-teams-tags" class="text-sm font-bold text-slate-700 uppercase"></span></div>
-                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100"><span class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Janela</span><span id="ov-time" class="text-sm font-bold text-slate-700"></span></div>
+                <div class="grid grid-cols-3 gap-3 text-black">
+                    <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100 flex flex-col justify-center">
+                        <span class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Equipe</span>
+                        <span id="ov-teams-tags" class="text-xs font-bold text-slate-700 uppercase truncate"></span>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100 flex flex-col justify-center">
+                        <span class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Janela</span>
+                        <span id="ov-time" class="text-xs font-bold text-slate-700 truncate"></span>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100 flex flex-col justify-center">
+                        <span class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Total US</span>
+                        <span id="ov-us" class="text-xs font-bold text-blue-600 truncate"></span>
+                    </div>
                 </div>
                 <div class="bg-blue-50 p-5 rounded-2xl border border-blue-100 text-black text-center"><span id="ov-date" class="text-lg font-bold text-blue-900 uppercase tracking-tight"></span></div>
                 <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 min-h-[140px] text-black"><p id="ov-comment" class="text-sm font-semibold italic text-slate-600 leading-relaxed"></p></div>
@@ -392,7 +356,6 @@
         </div>
     </div>
 
-    <!-- STATUS MODAL -->
     <div id="modal-status" class="fixed inset-0 bg-slate-900/60 hidden items-center justify-center z-[800] p-4 backdrop-blur-sm">
         <div class="bg-white rounded-[40px] w-full max-w-sm overflow-hidden shadow-2xl border border-slate-200">
             <div class="p-10 space-y-6 text-center">
@@ -400,7 +363,7 @@
                 <p id="status-modal-desc" class="text-[12px] font-bold text-slate-500 uppercase tracking-widest leading-relaxed"></p>
                 <textarea id="status-m-comment" placeholder="Breve nota de encerramento..." class="w-full modal-input h-32 text-center"></textarea>
                 <div class="flex gap-4">
-                    <button onclick="closeStatusModal()" class="flex-1 font-bold text-slate-400 text-xs uppercase hover:text-slate-600 transition-colors">Voltar</button>
+                    <button onclick="closeStatusModal()" class="flex-1 font-bold text-slate-400 text-xs uppercase transition-colors">Voltar</button>
                     <button id="status-confirm-btn" class="flex-[2] bg-blue-600 text-white py-5 rounded-[20px] font-bold uppercase text-xs shadow-lg shadow-blue-200">Confirmar</button>
                 </div>
             </div>
@@ -413,94 +376,66 @@
         const END_TS = new Date(2028, 11, 31).getTime();
         const MS_PER_DAY = 86400000;
         const WEEKDAYS = ["DOMINGO", "SEGUNDA-FEIRA", "TERÇA-FEIRA", "QUARTA-FEIRA", "QUINTA-FEIRA", "SEXTA-FEIRA", "SÁBADO"];
-        const MONTHS = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
-        let currentZoom = 35; 
-
+        
         let works = JSON.parse(localStorage.getItem('obras_quintiq_blindada')) || [];
-        let editingId = null; let tempItems = []; let activeFilter = 'all'; let collapsedDates = new Set(); let pendingStatusAction = null;
+        let fileHandle = null; let editingId = null; let tempItems = []; let activeFilter = 'all'; let collapsedDates = new Set();
+        let currentZoom = 35;
 
-        // --- DATA MANAGEMENT FUNCTIONS (FIX REF ERRORS) ---
+        // --- FILE SYSTEM SYNC ---
+        async function syncDatabase() {
+            try {
+                [fileHandle] = await window.showOpenFilePicker({
+                    types: [{ description: 'Banco de Dados JSON', accept: { 'application/json': ['.json'] } }],
+                });
+                const file = await fileHandle.getFile();
+                const contents = await file.text();
+                works = contents ? JSON.parse(contents) : [];
+                saveData(); render();
+                alert("Sincronizado com o arquivo local!");
+            } catch (e) { console.log("Cancelado"); }
+        }
 
-        window.exportData = function() {
-            const blob = new Blob([JSON.stringify(works, null, 2)], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url; link.download = `elektro_backup_${Date.now()}.txt`; link.click();
-        };
-
-        window.importData = function(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
+        async function saveData() {
+            localStorage.setItem('obras_quintiq_blindada', JSON.stringify(works));
+            if (fileHandle) {
                 try {
-                    works = JSON.parse(e.target.result);
-                    saveData(); render();
-                } catch (err) { alert("Arquivo inválido."); }
-                event.target.value = '';
-            };
-            reader.readAsText(file);
-        };
+                    const writable = await fileHandle.createWritable();
+                    await writable.write(JSON.stringify(works, null, 2));
+                    await writable.close();
+                } catch (e) { console.error("Erro ao escrever no arquivo", e); }
+            }
+        }
 
         function isoToBR(iso) { if(!iso) return ''; const [y, m, d] = iso.split('-'); return `${d}/${m}/${y}`; }
         function getDaysSinceStart(iso) { if(!iso) return 0; const [y, m, d] = iso.split('-').map(Number); return Math.round((new Date(y, m-1, d).getTime() - START_TS)/MS_PER_DAY); }
         function getISODateLocal() { const n = new Date(); return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}-${String(n.getDate()).padStart(2,'0')}`; }
-        function saveData() { localStorage.setItem('obras_quintiq_blindada', JSON.stringify(works)); }
 
         function init() {
             lucide.createIcons();
             applyZoom();
-            updateHeader();
             const fDate = document.getElementById('finder-date');
             if(fDate) fDate.value = getISODateLocal();
+            const n = new Date();
+            document.getElementById('current-date-display').innerText = `${String(n.getDate()).padStart(2,'0')}/${String(n.getMonth()+1).padStart(2,'0')}/${n.getFullYear()}`;
             setTimeout(scrollToToday, 500);
         }
 
-        window.toggleSidebar = function() {
-            document.getElementById('sidebar').classList.toggle('collapsed');
-        };
-
+        window.toggleSidebar = function() { document.getElementById('sidebar').classList.toggle('collapsed'); };
         window.scrollToToday = function() { scrollToDate(getISODateLocal()); };
-
-        function updateHeader() {
-            const n = new Date(); 
-            const dStr = `${String(n.getDate()).padStart(2,'0')}/${String(n.getMonth()+1).padStart(2,'0')}/${n.getFullYear()}`;
-            const e1 = document.getElementById('current-date-display'); if(e1) e1.innerText = dStr;
-        }
-
-        function changeZoom(v) { currentZoom = Math.max(15, Math.min(100, currentZoom + v)); applyZoom(); }
 
         function applyZoom() {
             document.documentElement.style.setProperty('--hour-w', `${currentZoom}px`);
             const header = document.getElementById('timeline-header');
-            if(!header) return;
             header.innerHTML = '';
-            const fragment = document.createDocumentFragment();
             const totalDays = Math.floor((END_TS - START_TS)/MS_PER_DAY)+1;
-            const dayStep = currentZoom < 25 ? 2 : 1;
-            for (let i = 0; i < totalDays; i += dayStep) {
+            for (let i = 0; i < totalDays; i++) {
                 const dObj = new Date(START_TS + (i * MS_PER_DAY));
                 const group = document.createElement('div');
                 group.className = 'day-group';
-                if(dayStep > 1) group.style.width = `calc(var(--day-w) * ${dayStep})`;
-                const info = document.createElement('div');
-                info.className = 'day-info';
-                info.innerText = `${WEEKDAYS[dObj.getDay()].substring(0,3)} ${String(dObj.getDate()).padStart(2,'0')}/${String(dObj.getMonth()+1).padStart(2,'0')}`;
-                const hours = document.createElement('div');
-                hours.className = 'hour-row flex h-[30px]';
-                const tickStep = currentZoom < 30 ? 12 : 6;
-                for (let h = 0; h < 24 * dayStep; h += tickStep) {
-                    const tick = document.createElement('div');
-                    tick.className = 'hour-tick';
-                    tick.style.width = `${currentZoom * tickStep}px`;
-                    tick.innerText = (h % 24).toString().padStart(2, '0');
-                    hours.appendChild(tick);
-                }
-                group.appendChild(info); group.appendChild(hours); fragment.appendChild(group);
+                group.innerHTML = `<div class="day-info">${WEEKDAYS[dObj.getDay()].substring(0,3)} ${String(dObj.getDate()).padStart(2,'0')}/${String(dObj.getMonth()+1).padStart(2,'0')}</div><div class="flex h-[30px]">${[0,6,12,18].map(h=>`<div class="hour-tick" style="width:${currentZoom*6}px">${h.toString().padStart(2,'0')}</div>`).join('')}</div>`;
+                header.appendChild(group);
             }
-            header.appendChild(fragment);
-            const grid = document.getElementById('timeline-grid');
-            if(grid) grid.style.width = `calc(var(--day-w) * ${totalDays})`;
+            document.getElementById('timeline-grid').style.width = `calc(var(--day-w) * ${totalDays})`;
             render();
         }
 
@@ -508,8 +443,7 @@
             const diff = getDaysSinceStart(iso);
             const [h, m] = start.split(':').map(Number);
             const target = (diff * 24 * currentZoom) + ((h + m/60) * currentZoom) - 350;
-            const parent = document.getElementById('gantt-scroll-parent');
-            if(parent) parent.scrollTo({ left: target, behavior: 'smooth' });
+            document.getElementById('gantt-scroll-parent').scrollTo({ left: target, behavior: 'smooth' });
         };
 
         window.triggerPulse = function(id) {
@@ -518,36 +452,25 @@
         };
 
         window.toggleDrawer = function(date) { collapsedDates.has(date) ? collapsedDates.delete(date) : collapsedDates.add(date); render(); };
-
         window.setActiveFilter = function(f) { activeFilter = f; render(); };
 
         function render() {
             const list = document.getElementById('sidebar-list');
             const labels = document.getElementById('timeline-labels');
             const grid = document.getElementById('timeline-grid');
-            const rowRepro = document.getElementById('row-reprogram');
-            const rowFinished = document.getElementById('row-finished');
-            const rowPending = document.getElementById('row-pending');
             
-            if(!list || !labels || !grid) return;
-
+            labels.innerHTML = ''; grid.innerHTML = ''; list.innerHTML = '';
             generateFilterBubbles();
 
-            labels.innerHTML = ''; grid.innerHTML = ''; list.innerHTML = '';
-            rowRepro.innerHTML = ''; rowFinished.innerHTML = ''; rowPending.innerHTML = '';
-
-            const reproList = works.filter(w => w.status === 'reprogramar');
-            const finishedList = works.filter(w => w.status === 'finished');
-            const pendingList = works.filter(w => w.status === 'pending');
-
-            const renderChips = (container, l, colorClass) => {
-                if(l.length === 0) { container.innerHTML = `<span class="text-[9px] text-slate-300 italic px-2">Vazio</span>`; return; }
-                container.innerHTML = l.map(w => `<div onclick="scrollToDate('${w.date}', '${w.start}'); triggerPulse('${w.id}')" class="row-item-chip ${colorClass} uppercase">${w.code}</div>`).join('');
+            // Dashboards superiores
+            const renderChips = (containerId, filterFn, colorClass) => {
+                const container = document.getElementById(containerId);
+                const items = works.filter(filterFn);
+                container.innerHTML = items.length ? items.map(w => `<div onclick="scrollToDate('${w.date}', '${w.start}'); triggerPulse('${w.id}')" class="row-item-chip ${colorClass} uppercase">${w.code}</div>`).join('') : '<span class="text-[9px] text-slate-300 italic px-2">Vazio</span>';
             };
-
-            renderChips(rowRepro, reproList, 'border-l-orange-400 border-l-4');
-            renderChips(rowFinished, finishedList, 'border-l-emerald-400 border-l-4');
-            renderChips(rowPending, pendingList, 'border-l-orange-400 border-l-4');
+            renderChips('row-reprogram', w => w.status === 'reprogramar', 'border-l-slate-400 border-l-4');
+            renderChips('row-finished', w => w.status === 'finished', 'border-l-emerald-400 border-l-4');
+            renderChips('row-pending', w => w.status === 'pending', 'border-l-orange-400 border-l-4');
 
             document.getElementById('sidebar-count').innerText = `${works.length} OBRAS`;
 
@@ -562,9 +485,9 @@
 
             Object.keys(grouped).sort().forEach(d => {
                 const header = document.createElement('div');
-                header.className = 'date-drawer-header';
+                header.className = 'date-drawer-header bg-slate-50 p-3 border-b border-slate-100 flex justify-between cursor-pointer font-bold text-slate-500 text-[11px]';
                 header.onclick = () => toggleDrawer(d);
-                header.innerHTML = `<span>📅 ${isoToBR(d)}</span><span class="text-xs opacity-50">(${grouped[d].length})</span>`;
+                header.innerHTML = `<span>📅 ${isoToBR(d)}</span><span>${grouped[d].length}</span>`;
                 list.appendChild(header);
 
                 if(!collapsedDates.has(d)) {
@@ -572,8 +495,18 @@
                         const card = document.createElement('div');
                         const stCl = w.status==='pending'?'card-pending':(w.status==='finished'?'card-finished':'card-reprogram');
                         card.className = `sidebar-card ${stCl}`;
-                        card.onclick = () => { if(w.status!=='reprogramar'){scrollToDate(w.date, w.start); triggerPulse(w.id);} };
-                        card.innerHTML = `<div class="flex justify-between items-start group"><div class="flex-1"><p class="obra-code-text">${w.code}</p><p class="text-[11px] font-bold text-slate-400">${isoToBR(w.date)} • ${w.start}</p><p class="text-[10px] font-bold text-blue-500 uppercase">${w.team}</p></div><div class="flex gap-2 opacity-0 group-hover:opacity-100"><button onclick="toggleWork(${w.id},'${w.code}',event)" class="bg-white p-2 border border-slate-100 rounded-xl shadow-sm text-emerald-500"><i data-lucide="check" class="w-4 h-4"></i></button><button onclick="toggleModal('edit',${w.id})" class="bg-white p-2 border border-slate-100 rounded-xl shadow-sm text-slate-400"><i data-lucide="pencil" class="w-4 h-4"></i></button></div></div>`;
+                        card.onclick = () => { scrollToDate(w.date, w.start); triggerPulse(w.id); };
+                        card.innerHTML = `<div class="flex justify-between items-start group">
+                            <div class="flex-1">
+                                <p class="text-slate-800 font-extrabold text-sm uppercase">${w.code}</p>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase">${w.start} - ${w.team}</p>
+                                ${w.us ? `<p class="text-[10px] font-black text-blue-500 mt-1">${w.us} US</p>` : ''}
+                            </div>
+                            <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button onclick="toggleWork(${w.id},'${w.code}',event)" class="bg-white p-2 border border-slate-100 rounded-lg text-emerald-500 shadow-sm"><i data-lucide="check" class="w-4 h-4"></i></button>
+                                <button onclick="toggleModal('edit',${w.id})" class="bg-white p-2 border border-slate-100 rounded-lg text-slate-400 shadow-sm"><i data-lucide="pencil" class="w-4 h-4"></i></button>
+                            </div>
+                        </div>`;
                         list.appendChild(card);
                     });
                 }
@@ -591,9 +524,9 @@
                         const width = ((eh+em/60)-(sh+sm/60)) * currentZoom;
                         const block = document.createElement('div');
                         block.className = `task-bar ${item.status==='finished'?'task-red':(t==='BB30'?'task-orange':'task-purple')}`;
-                        block.id = `task-${item.id}`; block.style.left = `${left}px`; block.style.width = `${Math.max(width, 30)}px`;
-                        block.innerText = item.code; 
-                        block.onclick = (e) => { e.preventDefault(); e.stopPropagation(); openOverview(item.id); };
+                        block.id = `task-${item.id}`; block.style.left = `${left}px`; block.style.width = `${Math.max(width, 40)}px`;
+                        block.innerHTML = `<span class="truncate">${item.code}</span>`; 
+                        block.onclick = (e) => { e.stopPropagation(); openOverview(item.id); };
                         row.appendChild(block);
                     }
                 });
@@ -604,41 +537,59 @@
 
         function generateFilterBubbles() {
             const container = document.getElementById('filter-bubbles-container');
-            const btns = [{id:'all',l:'Todas'},{id:'finished',l:'Apontadas'},{id:'pending',l:'Aguardando'},{id:'reprogramar',l:'Repro'}];
+            const btns = [{id:'all',l:'Todas'},{id:'finished',l:'Apontadas'},{id:'pending',l:'Aguardando'}];
             container.innerHTML = btns.map(b => `<div onclick="setActiveFilter('${b.id}')" class="filter-bubble ${activeFilter===b.id?'active':''}">${b.l}</div>`).join('') + `<div class="w-px h-5 bg-slate-100 mx-1 flex-shrink-0"></div>` + TEAMS.map(t => `<div onclick="setActiveFilter('${t}')" class="filter-bubble ${activeFilter===t?'active':''}">${t}</div>`).join('');
         }
 
-        function generateTeamToggles(selected = []) {
-            const container = document.getElementById('team-toggles-container');
-            if(!container) return;
-            container.innerHTML = TEAMS.map(t => `<div onclick="this.classList.toggle('active')" id="toggle-${t}" class="team-toggle ${selected.includes(t) ? 'active' : ''}">${t}</div>`).join('');
-        }
-
-        function getSelectedTeams() { return Array.from(document.querySelectorAll('.team-toggle.active')).map(el => el.innerText.trim()); }
-
         window.toggleModal = function(mode='add', id=null) {
             const m = document.getElementById('modal');
-            m.classList.remove('hidden'); m.classList.add('flex');
+            m.classList.replace('hidden', 'flex');
+            const btnPrimary = document.getElementById('modal-primary-btn');
+            const batchTable = document.getElementById('batch-table-container');
+
             if(mode==='edit') {
                 const item = works.find(w=>w.id == id); editingId = id;
                 document.getElementById('m-code').value = item.code;
                 document.getElementById('m-date').value = item.date;
+                document.getElementById('m-us').value = item.us || '';
                 document.getElementById('m-start').value = item.start;
                 document.getElementById('m-end').value = item.end;
                 document.getElementById('m-comment').value = item.comment || '';
                 generateTeamToggles([item.team]);
                 document.getElementById('modal-title').innerText = "Editar Obra";
-                document.getElementById('modal-primary-btn').innerText = "SALVAR ALTERAÇÕES";
+                btnPrimary.innerText = "SALVAR ALTERAÇÕES";
+                btnPrimary.onclick = saveEdit;
                 document.getElementById('modal-confirm-btn').style.display = "none";
+                batchTable.classList.add('hidden');
             } else {
-                tempItems = []; document.getElementById('m-code').value = '';
+                editingId = null; tempItems = [];
+                document.getElementById('m-code').value = '';
                 document.getElementById('m-date').value = getISODateLocal();
+                document.getElementById('m-us').value = '';
                 document.getElementById('m-comment').value = '';
                 generateTeamToggles(["BB30"]);
                 document.getElementById('modal-title').innerText = "Lançamento";
-                document.getElementById('modal-primary-btn').innerText = "ADICIONAR À FILA";
+                btnPrimary.innerText = "ADICIONAR À FILA";
+                btnPrimary.onclick = addItem;
                 document.getElementById('modal-confirm-btn').style.display = "block";
+                batchTable.classList.remove('hidden');
                 updateTempList();
+            }
+        };
+
+        window.saveEdit = function() {
+            if(!editingId) return;
+            const idx = works.findIndex(w => w.id == editingId);
+            if(idx > -1) {
+                works[idx].code = document.getElementById('m-code').value.trim().toUpperCase();
+                works[idx].date = document.getElementById('m-date').value;
+                works[idx].us = document.getElementById('m-us').value;
+                works[idx].start = document.getElementById('m-start').value;
+                works[idx].end = document.getElementById('m-end').value;
+                works[idx].comment = document.getElementById('m-comment').value;
+                const ts = getSelectedTeams();
+                if(ts.length) works[idx].team = ts[0];
+                saveData(); closeModal(); render();
             }
         };
 
@@ -647,14 +598,13 @@
             const date = document.getElementById('m-date').value;
             const teams = getSelectedTeams();
             if(!code || !date || teams.length === 0) return;
-            teams.forEach(t => tempItems.push({ id: Date.now()+Math.random(), code, date, team: t, start: document.getElementById('m-start').value, end: document.getElementById('m-end').value, comment: document.getElementById('m-comment').value, status: 'pending' }));
+            teams.forEach(t => tempItems.push({ id: Date.now()+Math.random(), code, date, team: t, us: document.getElementById('m-us').value, start: document.getElementById('m-start').value, end: document.getElementById('m-end').value, comment: document.getElementById('m-comment').value, status: 'pending' }));
             document.getElementById('m-code').value = ''; updateTempList();
         };
 
         window.updateTempList = function() {
             const tempTable = document.getElementById('temp-table');
-            if(!tempTable) return;
-            tempTable.innerHTML = tempItems.map(item => `<tr class="border-b border-slate-50"><td class="p-3 font-bold text-slate-800">${item.code}</td><td class="p-3 font-bold text-blue-500">${item.team}</td><td class="p-3 text-right"><button onclick="tempItems=tempItems.filter(x=>x.id!==${item.id});updateTempList();" class="text-red-300 hover:text-red-500 font-black px-2">X</button></td></tr>`).join('');
+            tempTable.innerHTML = tempItems.map(item => `<tr class="border-b border-slate-50"><td class="p-3 font-bold text-slate-800">${item.code}</td><td class="p-3 font-bold text-blue-500">${item.team}</td><td class="p-3 text-right"><button onclick="tempItems=tempItems.filter(x=>x.id!==${item.id});updateTempList();" class="text-red-300 hover:text-red-500 font-black">X</button></td></tr>`).join('');
             document.getElementById('modal-confirm-btn').disabled = tempItems.length === 0;
         };
 
@@ -664,21 +614,16 @@
         };
 
         window.toggleWork = function(id, code, event) {
-            event.stopPropagation(); const w = works.find(x => x.id == id);
-            if(w.status==='finished') { works=works.map(x=>x.id==id?{...x,status:'pending'}:x); saveData(); render(); }
-            else openStatusModal(id, 'finished', `Finalizar obra ${code} (${w.team})`);
-        };
-
-        window.setReprogramar = function(id, code, event) {
             if(event) event.stopPropagation();
             const w = works.find(x => x.id == id);
-            openStatusModal(id, 'reprogramar', `Reprogramar obra ${code} (${w.team})`);
+            if(w.status==='finished') { works=works.map(x=>x.id==id?{...x,status:'pending'}:x); saveData(); render(); }
+            else openStatusModal(id, 'finished', `Finalizar ${code}`);
         };
 
+        window.setReprogramar = function(id, code) { openStatusModal(id, 'reprogramar', `Reprogramar ${code}`); };
+
         window.openStatusModal = function(id, st, desc) {
-            pendingStatusAction = {id, status: st};
-            document.getElementById('modal-status').classList.remove('hidden');
-            document.getElementById('modal-status').classList.add('flex');
+            document.getElementById('modal-status').classList.replace('hidden', 'flex');
             document.getElementById('status-modal-desc').innerText = desc;
             document.getElementById('status-confirm-btn').onclick = () => {
                 works = works.map(x => x.id == id ? {...x, status: st, comment: document.getElementById('status-m-comment').value.trim() || x.comment} : x);
@@ -689,45 +634,45 @@
         window.openOverview = function(id) {
             const item = works.find(w => w.id == id);
             if (!item) return;
-            const m = document.getElementById('modal-overview');
             document.getElementById('ov-code').innerText = item.code;
             document.getElementById('ov-time').innerText = `${item.start} - ${item.end}`;
-            const [y, m_iso, d] = item.date.split('-');
-            const dObj = new Date(y, m_iso-1, d);
-            document.getElementById('ov-date').innerText = `${WEEKDAYS[dObj.getDay()]}, ${d}/${m_iso}/${y}`;
+            document.getElementById('ov-us').innerText = item.us ? `${item.us} US` : '--';
             document.getElementById('ov-comment').innerText = item.comment || "Sem notas registradas.";
             document.getElementById('ov-teams-tags').innerText = item.team;
             
-            const dot = document.getElementById('ov-status-dot');
-            const txt = document.getElementById('ov-status-text');
+            const [y, m_iso, d] = item.date.split('-');
+            const dObj = new Date(y, m_iso-1, d);
+            document.getElementById('ov-date').innerText = `${WEEKDAYS[dObj.getDay()]}, ${d}/${m_iso}/${y}`;
+
             const btn = document.getElementById('ov-toggle-btn');
             const btnRepro = document.getElementById('ov-repro-btn');
+            const txt = document.getElementById('ov-status-text');
+            const dot = document.getElementById('ov-status-dot');
             
             if (item.status === 'finished') { dot.style.backgroundColor = "#10b981"; txt.innerText = "Apontada"; btn.innerText = "REVERTER"; btnRepro.classList.add('hidden'); }
-            else if (item.status === 'reprogramar') { dot.style.backgroundColor = "#64748b"; txt.innerText = "Reprogramada"; btn.innerText = "ATIVAR"; btnRepro.classList.add('hidden'); }
             else { dot.style.backgroundColor = "#f97316"; txt.innerText = "Pendente"; btn.innerText = "FINALIZAR"; btnRepro.classList.remove('hidden'); }
             
             document.getElementById('ov-edit-btn').onclick = () => { closeOverview(); toggleModal('edit', id); };
             btnRepro.onclick = () => { closeOverview(); setReprogramar(id, item.code); };
-            btn.onclick = () => { closeOverview(); toggleWork(id, item.code, { stopPropagation: () => {} }); closeOverview(); };
-            m.classList.remove('hidden'); m.classList.add('flex');
-            lucide.createIcons();
+            btn.onclick = () => { closeOverview(); toggleWork(id, item.code); };
+            document.getElementById('modal-overview').classList.replace('hidden', 'flex');
         };
 
         window.handleWorkSearch = function(q) {
             const div = document.getElementById('search-results');
             if(!q || q.length < 2) { div.style.display='none'; return; }
-            const search = q.toLowerCase();
-            const filtered = works.filter(w => w.code.toLowerCase().includes(search)).slice(0, 10);
-            if (filtered.length > 0) {
-                div.innerHTML = filtered.map(w => `<div class="search-result-item" onclick="scrollToDate('${w.date}','${w.start}'); triggerPulse('${w.id}'); document.getElementById('search-results').style.display='none';"><span>${w.code}</span><span class="text-slate-400 font-bold ml-auto text-[10px] uppercase">${w.team}</span></div>`).join('');
-                div.style.display = 'block';
-            } else div.style.display = 'none';
+            const filtered = works.filter(w => w.code.toLowerCase().includes(q.toLowerCase())).slice(0, 8);
+            div.innerHTML = filtered.map(w => `<div class="search-result-item" onclick="scrollToDate('${w.date}','${w.start}'); triggerPulse('${w.id}'); document.getElementById('search-results').style.display='none';"><span>${w.code}</span><span class="text-blue-500 font-bold text-[10px]">${w.team}</span></div>`).join('');
+            div.style.display = filtered.length ? 'block' : 'none';
         };
 
-        window.closeOverview = function() { document.getElementById('modal-overview').classList.add('hidden'); };
-        window.closeStatusModal = function() { document.getElementById('modal-status').classList.add('hidden'); };
-        window.closeModal = function() { document.getElementById('modal').classList.add('hidden'); };
+        function generateTeamToggles(selected = []) {
+            document.getElementById('team-toggles-container').innerHTML = TEAMS.map(t => `<div onclick="this.classList.toggle('active')" class="team-toggle ${selected.includes(t) ? 'active' : ''}">${t}</div>`).join('');
+        }
+        function getSelectedTeams() { return Array.from(document.querySelectorAll('.team-toggle.active')).map(el => el.innerText); }
+        window.closeOverview = function() { document.getElementById('modal-overview').classList.replace('flex', 'hidden'); };
+        window.closeStatusModal = function() { document.getElementById('modal-status').classList.replace('flex', 'hidden'); };
+        window.closeModal = function() { document.getElementById('modal').classList.replace('flex', 'hidden'); };
 
         window.onload = init;
     </script>
