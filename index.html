@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Controle de Obras - Elektro Premium</title>
+    <!-- Adicionando script de configuração do Tailwind para habilitar o Dark Mode via classe -->
+    <script>
+        tailwind = {
+            config: {
+                darkMode: 'class',
+            }
+        };
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -16,6 +24,15 @@
             --header-h: 60px;
             --primary: #2563eb;
             --bg-body: #f1f5f9;
+            --grid-line-1: #e2e8f0;
+            --grid-line-2: #f8fafc;
+        }
+
+        /* VARIÁVEIS DO DARK MODE MONSTRO */
+        .dark {
+            --bg-body: #0f172a;
+            --grid-line-1: #1e293b;
+            --grid-line-2: #0f172a;
         }
 
         * {
@@ -30,13 +47,20 @@
             display: flex;
             flex-direction: column;
             color: #0f172a;
+            transition: background-color 0.3s ease;
         }
+        
+        .dark body { color: #f8fafc; }
 
         /* CUSTOM SCROLLBARS */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .dark ::-webkit-scrollbar-thumb { background: #334155; }
+        .dark ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        
         .no-scrollbar::-webkit-scrollbar { display: none; }
 
         /* HIGHLIGHT ANIMATION */
@@ -54,6 +78,7 @@
 
         /* LAYOUT & SIDEBAR */
         .app-container { flex: 1; display: flex; overflow: hidden; background: #fff; }
+        .dark .app-container { background: #0f172a; }
         
         .sidebar-container {
             width: 340px;
@@ -65,8 +90,11 @@
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), margin-left 0.3s ease;
             box-shadow: 4px 0 24px rgba(0,0,0,0.02);
         }
+        .dark .sidebar-container { background: #0f172a; border-color: #1e293b; box-shadow: 4px 0 24px rgba(0,0,0,0.4); }
+        
         .sidebar-container.collapsed { transform: translateX(-100%); margin-left: -340px; }
         .sidebar-scroll { flex: 1; overflow-y: auto; background: #f8fafc; }
+        .dark .sidebar-scroll { background: #0f172a; }
 
         /* ROW DASHBOARD */
         .dashboard-row {
@@ -74,11 +102,16 @@
             border-bottom: 1px solid #f1f5f9; gap: 16px; min-height: 54px;
             background: #ffffff;
         }
+        .dark .dashboard-row { background: #0f172a; border-color: #1e293b; }
+        .dark .dashboard-row.bg-slate-50\/50 { background: #1e293b; border-color: #0f172a; }
+        
         .row-label {
             font-size: 11px; font-weight: 800; color: #64748b;
             width: 110px; flex-shrink: 0; text-transform: uppercase;
             letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px;
         }
+        .dark .row-label { color: #94a3b8; }
+        
         .row-items { display: flex; gap: 10px; overflow-x: auto; flex: 1; padding: 4px 0; }
         .row-item-chip {
             padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 700;
@@ -86,10 +119,16 @@
             background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
             transition: all 0.2s; display: flex; align-items: center; gap: 6px;
         }
+        .dark .row-item-chip { background: #1e293b; border-color: #334155; color: #f1f5f9; }
+        
         .row-item-chip:hover { transform: translateY(-1px); box-shadow: 0 4px 6px rgba(0,0,0,0.04); }
+        .dark .row-item-chip.hover\:bg-orange-50:hover { background: #334155; border-color: #f59e0b; }
+        .dark .row-item-chip.hover\:bg-emerald-50:hover { background: #334155; border-color: #10b981; }
+        .dark .row-item-chip.hover\:bg-blue-50:hover { background: #334155; border-color: #3b82f6; }
 
         /* GANTT BASE */
         .gantt-viewport { flex: 1; overflow: auto; background: #fff; position: relative; }
+        .dark .gantt-viewport { background: #0f172a; }
         .gantt-container { display: grid; grid-template-columns: var(--label-w) auto; min-width: max-content; }
         
         .gantt-corner {
@@ -100,18 +139,21 @@
             border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0;
             box-shadow: 2px 2px 4px rgba(0,0,0,0.02);
         }
+        .dark .gantt-corner { background: #0f172a; border-color: #1e293b; color: #f1f5f9; box-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
 
         .gantt-header-timeline {
             position: sticky; top: 0; z-index: 90; height: var(--header-h);
             display: flex; background: #ffffff; border-bottom: 1px solid #e2e8f0;
             box-shadow: 0 2px 10px rgba(0,0,0,0.02);
         }
+        .dark .gantt-header-timeline { background: #0f172a; border-color: #1e293b; box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
 
         .gantt-label-column {
             position: sticky; left: 0; z-index: 80; background: #ffffff;
             width: var(--label-w); border-right: 1px solid #e2e8f0;
             box-shadow: 2px 0 10px rgba(0,0,0,0.02);
         }
+        .dark .gantt-label-column { background: #0f172a; border-color: #1e293b; box-shadow: 2px 0 10px rgba(0,0,0,0.3); }
 
         .gantt-label-cell {
             height: 48px; display: flex; align-items: center; padding: 0 20px;
@@ -119,28 +161,34 @@
             background: #ffffff; border-bottom: 1px solid #f1f5f9;
             gap: 10px;
         }
+        .dark .gantt-label-cell { background: #0f172a; border-color: #1e293b; color: #f8fafc; }
 
         .gantt-data-row {
             height: 48px; position: relative;
             background-image: 
-                linear-gradient(to right, #e2e8f0 1px, transparent 1px), 
-                linear-gradient(to right, #f8fafc 1px, transparent 1px);
+                linear-gradient(to right, var(--grid-line-1) 1px, transparent 1px), 
+                linear-gradient(to right, var(--grid-line-2) 1px, transparent 1px);
             background-size: var(--day-w) 100%, var(--hour-w) 100%;
             border-bottom: 1px solid #f1f5f9;
         }
+        .dark .gantt-data-row { border-color: #1e293b; }
         .gantt-data-row:hover { background-color: #f8fafc55; }
+        .dark .gantt-data-row:hover { background-color: rgba(30, 41, 59, 0.4); }
 
         .day-info {
             height: 32px; background: #f8fafc; color: #475569;
             display: flex; align-items: center; justify-content: center;
-            font-size: 11px; font-weight: 800; border-bottom: 1px solid #e2e8f0;
-            border-right: 1px solid #e2e8f0; text-transform: uppercase; letter-spacing: 0.5px;
+            font-size: 11px; font-weight: 800; border-bottom: 1px solid var(--grid-line-1);
+            border-right: 1px solid var(--grid-line-1); text-transform: uppercase; letter-spacing: 0.5px;
         }
+        .dark .day-info { background: #0f172a; color: #94a3b8; }
+        
         .hour-tick {
-            width: var(--hour-w); flex-shrink: 0; border-right: 1px solid #f1f5f9;
+            width: var(--hour-w); flex-shrink: 0; border-right: 1px solid var(--grid-line-2);
             display: flex; align-items: center; justify-content: center;
             font-size: 9px; font-weight: 600; color: #94a3b8; height: 28px;
         }
+        .dark .hour-tick { color: #64748b; }
 
         /* PREMIUM TASK BARS */
         .task-bar {
@@ -184,6 +232,7 @@
             max-height: 250px; overflow-y: auto; display: none; z-index: 501;
             border: 1px solid #e2e8f0; padding: 8px;
         }
+        .dark .search-results { background: rgba(15, 23, 42, 0.95); border-color: #334155; }
 
         .search-result-item {
             padding: 10px 16px; font-size: 13px; border-radius: 10px;
@@ -191,7 +240,9 @@
             display: flex; align-items: center; justify-content: space-between;
             transition: background 0.2s;
         }
+        .dark .search-result-item { color: #f8fafc; }
         .search-result-item:hover { background: #f1f5f9; }
+        .dark .search-result-item:hover { background: #1e293b; }
 
         /* FILTERS */
         .filter-bubble {
@@ -199,8 +250,11 @@
             color: #64748b; font-size: 11px; font-weight: 700;
             cursor: pointer; border: 1px solid transparent; transition: all 0.2s;
         }
+        .dark .filter-bubble { background: #1e293b; color: #94a3b8; }
         .filter-bubble:hover { background: #e2e8f0; }
+        .dark .filter-bubble:hover { background: #334155; color: #f1f5f9; }
         .filter-bubble.active { background: #0f172a; color: #fff; box-shadow: 0 4px 10px rgba(15,23,42,0.2); }
+        .dark .filter-bubble.active { background: #3b82f6; box-shadow: 0 4px 10px rgba(59,130,246,0.3); }
 
         /* SIDEBAR CARDS */
         .date-drawer-header {
@@ -210,18 +264,27 @@
             border-bottom: 1px solid #e2e8f0; font-size: 12px; font-weight: 700;
             box-shadow: 0 2px 4px rgba(0,0,0,0.01);
         }
+        .dark .date-drawer-header { background: #0f172a; border-color: #1e293b; color: #94a3b8; }
 
         .sidebar-card {
             padding: 16px 20px; border-bottom: 1px solid #f1f5f9;
             position: relative; cursor: pointer; transition: all 0.2s;
             background: #fff; border-left: 4px solid transparent;
         }
+        .dark .sidebar-card { background: #0f172a; border-bottom-color: #1e293b; }
         .sidebar-card:hover { background: #f8fafc; }
+        .dark .sidebar-card:hover { background: #1e293b; }
+        
         .card-pending { border-left-color: #f59e0b; }
         .card-finished { border-left-color: #10b981; }
         .card-reprogram { border-left-color: #94a3b8; background: #f8fafc; opacity: 0.7; }
         
+        .dark .card-pending { background: rgba(245, 158, 11, 0.05); }
+        .dark .card-finished { background: rgba(16, 185, 129, 0.05); }
+        .dark .card-reprogram { background: rgba(148, 163, 184, 0.05); opacity: 0.7; border-left-color: #475569; }
+        
         .obra-code-text { color: #0f172a; font-size: 15px; font-weight: 800; letter-spacing: -0.5px; }
+        .dark .obra-code-text { color: #f8fafc; }
 
         /* INPUTS & FORMS */
         .modal-input {
@@ -234,13 +297,17 @@
             border-color: #3b82f6 !important; background: #fff !important; 
             outline: none; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1) !important; 
         }
+        .dark .modal-input { background-color: #1e293b !important; color: #f8fafc !important; border-color: #334155 !important; }
+        .dark .modal-input:focus { background: #0f172a !important; border-color: #3b82f6 !important; }
 
         .team-toggle {
             padding: 10px 18px; border-radius: 12px; border: 1px solid #e2e8f0;
             background: #fff; color: #64748b; font-size: 13px; font-weight: 700; 
             cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
+        .dark .team-toggle { background: #1e293b; color: #94a3b8; border-color: #334155; }
         .team-toggle:hover { border-color: #cbd5e1; }
+        .dark .team-toggle:hover { border-color: #475569; color: #f8fafc; }
         .team-toggle.active { background: #2563eb; border-color: #2563eb; color: white; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2); }
 
         /* MODAL ANIMATIONS */
@@ -250,38 +317,52 @@
         @keyframes fadeIn { from { opacity: 0; backdrop-filter: blur(0px); } to { opacity: 1; backdrop-filter: blur(8px); } }
         @keyframes slideUpFade { from { opacity: 0; transform: translateY(20px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
     </style>
+    
+    <!-- Script de Inicialização de Tema para evitar flash branco -->
+    <script>
+        if (localStorage.getItem('elektro_theme') === 'dark' || (!localStorage.getItem('elektro_theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
 </head>
 <body>
 
     <!-- HEADER SUPERIOR GLASS -->
-    <header class="bg-white/90 backdrop-blur-md h-16 flex items-center justify-between px-6 z-[110] border-b border-slate-200 sticky top-0">
+    <header class="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md h-16 flex items-center justify-between px-6 z-[110] border-b border-slate-200 dark:border-slate-800 sticky top-0">
         <div class="flex items-center gap-5">
-            <button onclick="toggleSidebar()" class="p-2.5 hover:bg-slate-100 rounded-xl text-slate-500 transition-colors">
+            <button onclick="toggleSidebar()" class="p-2.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl text-slate-500 dark:text-slate-400 transition-colors">
                 <i data-lucide="menu" class="w-5 h-5"></i>
             </button>
-            <div class="bg-gradient-to-br from-orange-500 to-red-500 p-2.5 rounded-xl text-white shadow-lg shadow-orange-200">
+            <div class="bg-gradient-to-br from-orange-500 to-red-500 p-2.5 rounded-xl text-white shadow-lg shadow-orange-200 dark:shadow-none">
                 <i data-lucide="zap" class="w-5 h-5"></i>
             </div>
             <div>
-                <h1 class="text-xl font-extrabold tracking-tight text-slate-800 leading-none mb-1">Quintiq Elektro</h1>
-                <p class="text-[9px] text-slate-500 font-bold uppercase tracking-widest">Controle de Campo Bertioga</p>
+                <h1 class="text-xl font-extrabold tracking-tight text-slate-800 dark:text-slate-100 leading-none mb-1">Quintiq Elektro</h1>
+                <p class="text-[9px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest">Controle de Campo Bertioga</p>
             </div>
         </div>
         <div class="flex items-center gap-4">
             <!-- BOTÕES DE TROCA DE TELA -->
-            <div class="bg-slate-100 p-1 rounded-xl flex gap-1 border border-slate-200 mr-2">
-                <button id="btn-view-work" onclick="switchView('work')" class="px-3 py-1.5 rounded-lg text-[11px] font-bold bg-white text-slate-800 shadow-sm transition-all flex items-center gap-1.5"><i data-lucide="layout-grid" class="w-3.5 h-3.5"></i> Trabalho</button>
-                <button id="btn-view-dash" onclick="switchView('dash')" class="px-3 py-1.5 rounded-lg text-[11px] font-bold text-slate-500 hover:text-slate-700 hover:bg-slate-200/50 transition-all flex items-center gap-1.5"><i data-lucide="bar-chart-2" class="w-3.5 h-3.5"></i> Resumo US</button>
+            <div class="bg-slate-100 dark:bg-slate-800 p-1 rounded-xl flex gap-1 border border-slate-200 dark:border-slate-700 mr-2">
+                <button id="btn-view-work" onclick="switchView('work')" class="px-3 py-1.5 rounded-lg text-[11px] font-bold bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-100 shadow-sm transition-all flex items-center gap-1.5"><i data-lucide="layout-grid" class="w-3.5 h-3.5"></i> Trabalho</button>
+                <button id="btn-view-dash" onclick="switchView('dash')" class="px-3 py-1.5 rounded-lg text-[11px] font-bold text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition-all flex items-center gap-1.5"><i data-lucide="bar-chart-2" class="w-3.5 h-3.5"></i> Resumo US</button>
             </div>
 
-            <div class="flex gap-4 border-r border-slate-200 pr-6 mr-2">
-                <button onclick="connectLocalDB()" id="btn-sync-db" class="text-slate-500 font-bold text-[11px] hover:text-emerald-600 uppercase flex items-center gap-1 transition-colors" title="Vincular arquivo JSON local para salvar e ler automaticamente"><i data-lucide="database" class="w-3 h-3"></i> Sync DB</button>
-                <button onclick="exportData()" class="text-slate-500 font-bold text-[11px] hover:text-blue-600 uppercase flex items-center gap-1 transition-colors" title="Exportar cópia manual"><i data-lucide="download" class="w-3 h-3"></i> Exportar</button>
-                <button onclick="document.getElementById('import-input').click()" class="text-slate-500 font-bold text-[11px] hover:text-orange-600 uppercase flex items-center gap-1 transition-colors" title="Importar cópia manual"><i data-lucide="upload" class="w-3 h-3"></i> Importar</button>
+            <div class="flex gap-4 border-r border-slate-200 dark:border-slate-700 pr-6 mr-2">
+                <button onclick="connectLocalDB()" id="btn-sync-db" class="text-slate-500 dark:text-slate-400 font-bold text-[11px] hover:text-emerald-600 dark:hover:text-emerald-400 uppercase flex items-center gap-1 transition-colors" title="Vincular arquivo JSON local para salvar e ler automaticamente"><i data-lucide="database" class="w-3 h-3"></i> Sync DB</button>
+                <button onclick="exportData()" class="text-slate-500 dark:text-slate-400 font-bold text-[11px] hover:text-blue-600 dark:hover:text-blue-400 uppercase flex items-center gap-1 transition-colors" title="Exportar cópia manual"><i data-lucide="download" class="w-3 h-3"></i> Exportar</button>
+                <button onclick="document.getElementById('import-input').click()" class="text-slate-500 dark:text-slate-400 font-bold text-[11px] hover:text-orange-600 dark:hover:text-orange-400 uppercase flex items-center gap-1 transition-colors" title="Importar cópia manual"><i data-lucide="upload" class="w-3 h-3"></i> Importar</button>
                 <input type="file" id="import-input" class="hidden" accept=".txt,.json" onchange="importData(event)">
             </div>
-            <button onclick="scrollToToday()" class="bg-slate-100 text-slate-700 px-5 py-2.5 rounded-xl font-bold text-[11px] border border-slate-200 hover:bg-slate-200 transition-colors shadow-sm">HOJE</button>
-            <button onclick="toggleModal('add')" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-6 py-2.5 rounded-xl font-bold text-xs uppercase shadow-lg shadow-blue-500/30 active:scale-95 transition-all flex items-center gap-2">
+
+            <!-- THEME TOGGLE -->
+            <button onclick="toggleTheme()" class="p-2.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl text-slate-500 dark:text-slate-400 transition-colors" title="Alternar Tema Escuro/Claro">
+                <i data-lucide="moon" class="w-5 h-5 dark:hidden"></i>
+                <i data-lucide="sun" class="w-5 h-5 hidden dark:block"></i>
+            </button>
+
+            <button onclick="scrollToToday()" class="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-5 py-2.5 rounded-xl font-bold text-[11px] border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors shadow-sm">HOJE</button>
+            <button onclick="toggleModal('add')" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-6 py-2.5 rounded-xl font-bold text-xs uppercase shadow-lg shadow-blue-500/30 dark:shadow-none active:scale-95 transition-all flex items-center gap-2">
                 <i data-lucide="plus" class="w-4 h-4"></i> LANÇAR LOTE
             </button>
         </div>
@@ -290,9 +371,9 @@
     <div id="work-view" class="app-container">
         <!-- SIDEBAR -->
         <aside id="sidebar" class="sidebar-container">
-            <div class="p-5 bg-white border-b border-slate-100 shadow-sm z-10">
+            <div class="p-5 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 shadow-sm z-10">
                 <div class="flex justify-between items-center mb-4 px-1">
-                    <span class="text-[12px] font-extrabold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                    <span class="text-[12px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest flex items-center gap-2">
                         <i data-lucide="layers" class="w-4 h-4"></i> <span id="sidebar-count">0 OBRAS</span>
                     </span>
                 </div>
@@ -300,18 +381,18 @@
             </div>
             <div id="sidebar-list" class="sidebar-scroll relative">
                 <div id="empty-state" class="hidden flex-col items-center justify-center h-64 text-center px-6">
-                    <div class="bg-slate-100 p-4 rounded-full mb-4 text-slate-300">
+                    <div class="bg-slate-100 dark:bg-slate-800 p-4 rounded-full mb-4 text-slate-300 dark:text-slate-500">
                         <i data-lucide="clipboard-list" class="w-10 h-10"></i>
                     </div>
-                    <p class="text-slate-500 font-bold text-sm">Nenhuma obra encontrada.</p>
-                    <p class="text-slate-400 text-xs mt-1">Clique em "Lançar Lote" para começar ou sincronize um BD.</p>
+                    <p class="text-slate-500 dark:text-slate-400 font-bold text-sm">Nenhuma obra encontrada.</p>
+                    <p class="text-slate-400 dark:text-slate-500 text-xs mt-1">Clique em "Lançar Lote" para começar ou sincronize um BD.</p>
                 </div>
             </div>
         </aside>
 
         <!-- ÁREA CENTRAL -->
-        <main class="flex-1 flex flex-col overflow-hidden bg-white">
-            <div class="bg-white border-b border-slate-200 shadow-sm relative z-20">
+        <main class="flex-1 flex flex-col overflow-hidden bg-white dark:bg-slate-900">
+            <div class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-sm relative z-20">
                 <div class="dashboard-row">
                     <div class="row-label"><i data-lucide="calendar-clock" class="w-4 h-4 text-orange-400"></i> Reprogramar</div>
                     <div id="row-reprogram" class="row-items no-scrollbar"></div>
@@ -338,54 +419,54 @@
     </div>
 
     <!-- TELA DE DASHBOARD -->
-    <div id="dash-view" class="hidden flex-1 flex-col overflow-y-auto bg-slate-50 p-8 w-full z-10 pb-32">
+    <div id="dash-view" class="hidden flex-1 flex-col overflow-y-auto bg-slate-50 dark:bg-slate-900 p-8 w-full z-10 pb-32">
         <div class="max-w-5xl mx-auto w-full space-y-8">
             <div class="flex items-center justify-between">
-                <h2 class="text-2xl font-extrabold text-slate-800 flex items-center gap-3"><i data-lucide="pie-chart" class="w-7 h-7 text-blue-600"></i> Dashboard de Unidades de Serviço (US)</h2>
-                <button onclick="switchView('work')" class="text-slate-500 hover:bg-slate-200 p-2 rounded-xl transition-colors font-bold text-xs flex items-center gap-2"><i data-lucide="arrow-left" class="w-4 h-4"></i> Voltar ao Trabalho</button>
+                <h2 class="text-2xl font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-3"><i data-lucide="pie-chart" class="w-7 h-7 text-blue-600 dark:text-blue-500"></i> Dashboard de Unidades de Serviço (US)</h2>
+                <button onclick="switchView('work')" class="text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 p-2 rounded-xl transition-colors font-bold text-xs flex items-center gap-2"><i data-lucide="arrow-left" class="w-4 h-4"></i> Voltar ao Trabalho</button>
             </div>
             
             <!-- CARDS DE RESUMO -->
             <div class="grid grid-cols-3 gap-6">
-                <div onclick="renderDashDetails('all')" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all cursor-pointer group">
+                <div onclick="renderDashDetails('all')" class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all cursor-pointer group">
                     <div class="flex justify-between items-start mb-4">
-                        <div class="bg-blue-100 text-blue-600 p-3 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-colors"><i data-lucide="layers" class="w-6 h-6"></i></div>
-                        <span class="bg-slate-100 text-slate-500 text-[10px] font-bold px-2 py-1 rounded-lg uppercase">Total</span>
+                        <div class="bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 p-3 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-colors"><i data-lucide="layers" class="w-6 h-6"></i></div>
+                        <span class="bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 text-[10px] font-bold px-2 py-1 rounded-lg uppercase">Total</span>
                     </div>
-                    <h3 class="text-3xl font-black text-slate-800 mb-1 tracking-tight" id="dash-card-total">0.0 US</h3>
-                    <p class="text-xs font-semibold text-slate-400">Em todas as obras cadastradas</p>
+                    <h3 class="text-3xl font-black text-slate-800 dark:text-slate-100 mb-1 tracking-tight" id="dash-card-total">0.0 US</h3>
+                    <p class="text-xs font-semibold text-slate-400 dark:text-slate-500">Em todas as obras cadastradas</p>
                 </div>
                 
-                <div onclick="renderDashDetails('finished')" class="bg-white p-6 rounded-2xl border border-emerald-100 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all cursor-pointer group relative overflow-hidden">
-                    <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none"></div>
+                <div onclick="renderDashDetails('finished')" class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-emerald-100 dark:border-emerald-900/50 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all cursor-pointer group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-50 dark:bg-emerald-900/10 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none"></div>
                     <div class="flex justify-between items-start mb-4 relative z-10">
-                        <div class="bg-emerald-100 text-emerald-600 p-3 rounded-xl group-hover:bg-emerald-500 group-hover:text-white transition-colors"><i data-lucide="check-circle-2" class="w-6 h-6"></i></div>
-                        <span class="bg-emerald-50 text-emerald-600 text-[10px] font-bold px-2 py-1 rounded-lg uppercase">Apontadas</span>
+                        <div class="bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 p-3 rounded-xl group-hover:bg-emerald-500 group-hover:text-white transition-colors"><i data-lucide="check-circle-2" class="w-6 h-6"></i></div>
+                        <span class="bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold px-2 py-1 rounded-lg uppercase">Apontadas</span>
                     </div>
-                    <h3 class="text-3xl font-black text-emerald-700 mb-1 tracking-tight relative z-10" id="dash-card-finished">0.0 US</h3>
-                    <p class="text-xs font-semibold text-emerald-600/70 relative z-10" id="dash-pct-finished">0% do total</p>
+                    <h3 class="text-3xl font-black text-emerald-700 dark:text-emerald-400 mb-1 tracking-tight relative z-10" id="dash-card-finished">0.0 US</h3>
+                    <p class="text-xs font-semibold text-emerald-600/70 dark:text-emerald-500/70 relative z-10" id="dash-pct-finished">0% do total</p>
                 </div>
 
-                <div onclick="renderDashDetails('pending')" class="bg-white p-6 rounded-2xl border border-amber-100 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all cursor-pointer group relative overflow-hidden">
-                    <div class="absolute top-0 right-0 w-32 h-32 bg-amber-50 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none"></div>
+                <div onclick="renderDashDetails('pending')" class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-amber-100 dark:border-amber-900/50 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all cursor-pointer group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-amber-50 dark:bg-amber-900/10 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none"></div>
                     <div class="flex justify-between items-start mb-4 relative z-10">
-                        <div class="bg-amber-100 text-amber-600 p-3 rounded-xl group-hover:bg-amber-500 group-hover:text-white transition-colors"><i data-lucide="clock-4" class="w-6 h-6"></i></div>
-                        <span class="bg-amber-50 text-amber-600 text-[10px] font-bold px-2 py-1 rounded-lg uppercase">Pendentes</span>
+                        <div class="bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 p-3 rounded-xl group-hover:bg-amber-500 group-hover:text-white transition-colors"><i data-lucide="clock-4" class="w-6 h-6"></i></div>
+                        <span class="bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-[10px] font-bold px-2 py-1 rounded-lg uppercase">Pendentes</span>
                     </div>
-                    <h3 class="text-3xl font-black text-amber-700 mb-1 tracking-tight relative z-10" id="dash-card-pending">0.0 US</h3>
-                    <p class="text-xs font-semibold text-amber-600/70 relative z-10" id="dash-pct-pending">0% do total</p>
+                    <h3 class="text-3xl font-black text-amber-700 dark:text-amber-400 mb-1 tracking-tight relative z-10" id="dash-card-pending">0.0 US</h3>
+                    <p class="text-xs font-semibold text-amber-600/70 dark:text-amber-500/70 relative z-10" id="dash-pct-pending">0% do total</p>
                 </div>
             </div>
 
             <!-- DETALHES LISTAGEM -->
-            <div id="dash-details-container" class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden hidden transition-all">
-                <div class="p-5 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
-                    <h3 id="dash-details-title" class="font-extrabold text-slate-700 uppercase tracking-widest text-xs flex items-center gap-2"><i data-lucide="list" class="w-4 h-4 text-blue-500"></i> Detalhamento de Obras</h3>
-                    <span id="dash-details-count" class="bg-blue-100 text-blue-700 font-bold px-2.5 py-1 rounded-lg text-[10px]">0 Obras</span>
+            <div id="dash-details-container" class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden hidden transition-all">
+                <div class="p-5 border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 flex justify-between items-center">
+                    <h3 id="dash-details-title" class="font-extrabold text-slate-700 dark:text-slate-200 uppercase tracking-widest text-xs flex items-center gap-2"><i data-lucide="list" class="w-4 h-4 text-blue-500"></i> Detalhamento de Obras</h3>
+                    <span id="dash-details-count" class="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400 font-bold px-2.5 py-1 rounded-lg text-[10px]">0 Obras</span>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
-                        <thead class="bg-white border-b border-slate-100 text-[10px] uppercase text-slate-400 font-extrabold tracking-wider">
+                        <thead class="bg-white dark:bg-slate-800 border-b border-slate-100 dark:border-slate-700 text-[10px] uppercase text-slate-400 dark:text-slate-500 font-extrabold tracking-wider">
                             <tr>
                                 <th class="p-4 pl-6">Código da Obra</th>
                                 <th class="p-4">Equipe</th>
@@ -395,7 +476,7 @@
                                 <th></th>
                             </tr>
                         </thead>
-                        <tbody id="dash-details-body" class="divide-y divide-slate-50">
+                        <tbody id="dash-details-body" class="divide-y divide-slate-50 dark:divide-slate-700/50">
                             <!-- JS injected -->
                         </tbody>
                     </table>
@@ -408,7 +489,7 @@
     <div id="finder-dock" class="finder-dock">
         <div class="flex items-center gap-2 hover:bg-white/10 p-2 rounded-xl transition-colors">
             <i data-lucide="calendar" class="w-4 h-4 text-blue-400"></i>
-            <input type="date" id="finder-date" onchange="scrollToDate(this.value)" class="bg-transparent border-none text-white text-[13px] font-bold outline-none cursor-pointer">
+            <input type="date" id="finder-date" onchange="scrollToDate(this.value)" class="bg-transparent border-none text-white text-[13px] font-bold outline-none cursor-pointer [color-scheme:dark]">
         </div>
         <div class="w-px h-6 bg-slate-700/50"></div>
         <div class="relative flex items-center">
@@ -420,53 +501,51 @@
         <div id="current-date-display" class="text-[11px] font-bold text-blue-400 uppercase tracking-wider ml-2 bg-blue-500/10 px-3 py-1.5 rounded-lg"></div>
     </div>
 
-    <!-- MODAL PRINCIPAL (Adicionado Campo US) -->
-    <div id="modal" class="fixed inset-0 bg-slate-900/40 hidden items-center justify-center z-[600] p-4 modal-backdrop">
-        <div class="bg-white rounded-[28px] w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh] shadow-2xl border border-slate-100 modal-content">
-            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/80 backdrop-blur-sm">
-                <h3 id="modal-title" class="text-xl font-extrabold text-slate-800 uppercase flex items-center gap-2">
-                    <i data-lucide="edit-3" class="w-5 h-5 text-blue-600"></i> Lançamento
+    <!-- MODAL PRINCIPAL -->
+    <div id="modal" class="fixed inset-0 bg-slate-900/40 dark:bg-slate-950/80 hidden items-center justify-center z-[600] p-4 modal-backdrop">
+        <div class="bg-white dark:bg-slate-900 rounded-[28px] w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh] shadow-2xl border border-slate-100 dark:border-slate-800 modal-content">
+            <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/80 dark:bg-slate-800/80 backdrop-blur-sm">
+                <h3 id="modal-title" class="text-xl font-extrabold text-slate-800 dark:text-slate-100 uppercase flex items-center gap-2">
+                    <i data-lucide="edit-3" class="w-5 h-5 text-blue-600 dark:text-blue-500"></i> Lançamento
                 </h3>
-                <button onclick="closeModal()" class="p-2 hover:bg-slate-200 rounded-full transition-colors"><i data-lucide="x" class="w-5 h-5 text-slate-400 hover:text-slate-700"></i></button>
+                <button onclick="closeModal()" class="p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-colors"><i data-lucide="x" class="w-5 h-5 text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"></i></button>
             </div>
             <div class="p-8 overflow-y-auto flex-1 space-y-8 custom-scrollbar">
-                <div class="grid grid-cols-2 gap-6 text-slate-800">
+                <div class="grid grid-cols-2 gap-6 text-slate-800 dark:text-slate-200">
                     <div class="col-span-2">
-                        <label class="text-[11px] font-bold uppercase text-slate-500 mb-2 block px-1 tracking-wider">Código da Obra</label>
+                        <label class="text-[11px] font-bold uppercase text-slate-500 dark:text-slate-400 mb-2 block px-1 tracking-wider">Código da Obra</label>
                         <input type="text" id="m-code" class="w-full modal-input uppercase" placeholder="MR-00XXXXXX">
                     </div>
                     <div class="col-span-2">
-                        <label class="text-[11px] font-bold uppercase text-slate-500 mb-3 block px-1 tracking-wider">Equipes de Campo</label>
+                        <label class="text-[11px] font-bold uppercase text-slate-500 dark:text-slate-400 mb-3 block px-1 tracking-wider">Equipes de Campo</label>
                         <div id="team-toggles-container" class="flex flex-wrap gap-3"></div>
                     </div>
                     
-                    <!-- Linha com Data e US lado a lado -->
                     <div class="col-span-1">
-                        <label class="text-[11px] font-bold uppercase text-slate-500 mb-2 block px-1 tracking-wider">Data Programada</label>
-                        <input type="date" id="m-date" class="w-full modal-input">
+                        <label class="text-[11px] font-bold uppercase text-slate-500 dark:text-slate-400 mb-2 block px-1 tracking-wider">Data Programada</label>
+                        <input type="date" id="m-date" class="w-full modal-input [color-scheme:light] dark:[color-scheme:dark]">
                     </div>
                     <div class="col-span-1">
-                        <label class="text-[11px] font-bold uppercase text-slate-500 mb-2 block px-1 tracking-wider flex items-center gap-1"><i data-lucide="zap" class="w-3 h-3 text-amber-500"></i> Unidades de Serviço (US)</label>
-                        <input type="number" id="m-us" class="w-full modal-input border-amber-200 focus:border-amber-400" placeholder="Ex: 15.5" step="0.1" min="0">
+                        <label class="text-[11px] font-bold uppercase text-slate-500 dark:text-slate-400 mb-2 block px-1 tracking-wider flex items-center gap-1"><i data-lucide="zap" class="w-3 h-3 text-amber-500"></i> Unidades de Serviço (US)</label>
+                        <input type="number" id="m-us" class="w-full modal-input border-amber-200 dark:border-amber-900/50 focus:border-amber-400 dark:focus:border-amber-500" placeholder="Ex: 15.5" step="0.1" min="0">
                     </div>
 
                     <div class="col-span-2 flex gap-4">
-                        <div class="flex-1"><label class="text-[11px] font-bold uppercase text-slate-500 mb-2 block px-1 tracking-wider">Início</label><input type="time" id="m-start" class="w-full modal-input"></div>
-                        <div class="flex-1"><label class="text-[11px] font-bold uppercase text-slate-500 mb-2 block px-1 tracking-wider">Término</label><input type="time" id="m-end" class="w-full modal-input"></div>
+                        <div class="flex-1"><label class="text-[11px] font-bold uppercase text-slate-500 dark:text-slate-400 mb-2 block px-1 tracking-wider">Início</label><input type="time" id="m-start" class="w-full modal-input [color-scheme:light] dark:[color-scheme:dark]"></div>
+                        <div class="flex-1"><label class="text-[11px] font-bold uppercase text-slate-500 dark:text-slate-400 mb-2 block px-1 tracking-wider">Término</label><input type="time" id="m-end" class="w-full modal-input [color-scheme:light] dark:[color-scheme:dark]"></div>
                     </div>
                     <div class="col-span-2">
-                        <label class="text-[11px] font-bold uppercase text-slate-500 mb-2 block px-1 tracking-wider">Notas / Relatório (Opcional)</label>
+                        <label class="text-[11px] font-bold uppercase text-slate-500 dark:text-slate-400 mb-2 block px-1 tracking-wider">Notas / Relatório (Opcional)</label>
                         <textarea id="m-comment" class="w-full modal-input h-28 resize-none" placeholder="Adicione instruções ou observações de campo..."></textarea>
                     </div>
                 </div>
-                <button id="modal-primary-btn" onclick="addItem()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-200 transition-all flex justify-center items-center gap-2">
+                <button id="modal-primary-btn" onclick="addItem()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-200 dark:shadow-none transition-all flex justify-center items-center gap-2">
                     <i data-lucide="list-plus" class="w-5 h-5"></i> ADICIONAR À FILA
                 </button>
                 
-                <div id="batch-table-container" class="border border-slate-200 rounded-xl bg-white mt-4 overflow-hidden shadow-sm">
+                <div id="batch-table-container" class="border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 mt-4 overflow-hidden shadow-sm">
                     <table class="w-full">
-                        <thead class="bg-slate-50 border-b border-slate-200 text-[10px] uppercase text-slate-500 font-extrabold tracking-wider">
-                            <!-- Atualizado para incluir coluna US -->
+                        <thead class="bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 text-[10px] uppercase text-slate-500 dark:text-slate-400 font-extrabold tracking-wider">
                             <tr>
                                 <th class="p-4 text-left">Obra</th>
                                 <th class="p-4 text-left">Equipe</th>
@@ -474,25 +553,25 @@
                                 <th class="p-4 text-right">Ação</th>
                             </tr>
                         </thead>
-                        <tbody id="temp-table" class="text-sm font-semibold divide-y divide-slate-100">
+                        <tbody id="temp-table" class="text-sm font-semibold divide-y divide-slate-100 dark:divide-slate-700">
                             <!-- JS injected -->
                         </tbody>
                     </table>
-                    <div id="temp-empty" class="p-6 text-center text-xs text-slate-400 font-bold bg-slate-50">Fila de lançamento vazia.</div>
+                    <div id="temp-empty" class="p-6 text-center text-xs text-slate-400 dark:text-slate-500 font-bold bg-slate-50 dark:bg-slate-900">Fila de lançamento vazia.</div>
                 </div>
             </div>
-            <div class="p-6 bg-slate-50 border-t border-slate-200 flex gap-4">
-                <button onclick="closeModal()" class="flex-1 font-bold text-slate-500 uppercase text-xs hover:bg-slate-200 rounded-xl transition-colors">Cancelar</button>
-                <button id="modal-confirm-btn" onclick="finalize()" disabled class="flex-[2] bg-slate-900 hover:bg-black disabled:bg-slate-300 disabled:cursor-not-allowed text-white py-4 rounded-xl font-bold text-xs shadow-md transition-all flex justify-center items-center gap-2">
+            <div class="p-6 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex gap-4">
+                <button onclick="closeModal()" class="flex-1 font-bold text-slate-500 dark:text-slate-400 uppercase text-xs hover:bg-slate-200 dark:hover:bg-slate-800 rounded-xl transition-colors">Cancelar</button>
+                <button id="modal-confirm-btn" onclick="finalize()" disabled class="flex-[2] bg-slate-900 dark:bg-slate-700 hover:bg-black dark:hover:bg-slate-600 disabled:bg-slate-300 dark:disabled:bg-slate-800 disabled:text-slate-500 disabled:cursor-not-allowed text-white py-4 rounded-xl font-bold text-xs shadow-md transition-all flex justify-center items-center gap-2">
                     <i data-lucide="save" class="w-4 h-4"></i> GRAVAR NO SISTEMA
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- OVERVIEW MODAL (Adicionado Card US) -->
-    <div id="modal-overview" class="fixed inset-0 bg-slate-900/60 hidden items-center justify-center z-[700] p-4 modal-backdrop">
-        <div class="bg-white rounded-[32px] w-full max-w-md overflow-hidden shadow-2xl border border-slate-100 modal-content relative">
+    <!-- OVERVIEW MODAL -->
+    <div id="modal-overview" class="fixed inset-0 bg-slate-900/60 dark:bg-slate-950/80 hidden items-center justify-center z-[700] p-4 modal-backdrop">
+        <div class="bg-white dark:bg-slate-900 rounded-[32px] w-full max-w-md overflow-hidden shadow-2xl border border-slate-100 dark:border-slate-800 modal-content relative">
             <div class="bg-slate-900 p-8 text-white relative overflow-hidden">
                 <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-2xl -mr-10 -mt-10"></div>
                 <button onclick="closeOverview()" class="absolute top-6 right-6 p-2 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors z-10"><i data-lucide="x" class="w-5 h-5"></i></button>
@@ -503,56 +582,55 @@
                 </div>
                 <h2 id="ov-code" class="text-3xl font-extrabold tracking-tight uppercase leading-none relative z-10"></h2>
             </div>
-            <div class="p-8 space-y-6 bg-white relative z-10">
+            <div class="p-8 space-y-6 bg-white dark:bg-slate-900 relative z-10">
                 
-                <!-- Ajustado para Grid de 3 colunas para acomodar Equipe, US e Janela -->
-                <div class="grid grid-cols-3 gap-3 text-black">
-                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex flex-col justify-center">
-                        <span class="text-[10px] font-bold text-slate-400 uppercase block mb-1 flex items-center gap-1"><i data-lucide="users" class="w-3 h-3"></i> Equipe</span>
-                        <span id="ov-teams-tags" class="text-sm font-extrabold text-slate-800 uppercase"></span>
+                <div class="grid grid-cols-3 gap-3 text-black dark:text-slate-200">
+                    <div class="bg-slate-50 dark:bg-slate-800 p-4 rounded-2xl border border-slate-100 dark:border-slate-700 flex flex-col justify-center">
+                        <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase block mb-1 flex items-center gap-1"><i data-lucide="users" class="w-3 h-3"></i> Equipe</span>
+                        <span id="ov-teams-tags" class="text-sm font-extrabold text-slate-800 dark:text-slate-100 uppercase"></span>
                     </div>
-                    <div class="bg-amber-50 p-4 rounded-2xl border border-amber-100 flex flex-col justify-center">
-                        <span class="text-[10px] font-bold text-amber-600/70 uppercase block mb-1 flex items-center gap-1"><i data-lucide="zap" class="w-3 h-3"></i> Valor US</span>
-                        <span id="ov-us" class="text-sm font-extrabold text-amber-700 uppercase"></span>
+                    <div class="bg-amber-50 dark:bg-amber-900/30 p-4 rounded-2xl border border-amber-100 dark:border-amber-900/50 flex flex-col justify-center">
+                        <span class="text-[10px] font-bold text-amber-600/70 dark:text-amber-500/70 uppercase block mb-1 flex items-center gap-1"><i data-lucide="zap" class="w-3 h-3"></i> Valor US</span>
+                        <span id="ov-us" class="text-sm font-extrabold text-amber-700 dark:text-amber-400 uppercase"></span>
                     </div>
-                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex flex-col justify-center">
-                        <span class="text-[10px] font-bold text-slate-400 uppercase block mb-1 flex items-center gap-1"><i data-lucide="clock-4" class="w-3 h-3"></i> Janela</span>
-                        <span id="ov-time" class="text-sm font-extrabold text-slate-800"></span>
+                    <div class="bg-slate-50 dark:bg-slate-800 p-4 rounded-2xl border border-slate-100 dark:border-slate-700 flex flex-col justify-center">
+                        <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase block mb-1 flex items-center gap-1"><i data-lucide="clock-4" class="w-3 h-3"></i> Janela</span>
+                        <span id="ov-time" class="text-sm font-extrabold text-slate-800 dark:text-slate-100"></span>
                     </div>
                 </div>
                 
-                <div class="bg-blue-50/50 p-4 rounded-2xl border border-blue-100/50 text-center flex items-center justify-center gap-3">
-                    <i data-lucide="calendar-days" class="w-5 h-5 text-blue-500"></i>
-                    <span id="ov-date" class="text-base font-extrabold text-blue-900 uppercase tracking-tight"></span>
+                <div class="bg-blue-50/50 dark:bg-blue-900/30 p-4 rounded-2xl border border-blue-100/50 dark:border-blue-900/50 text-center flex items-center justify-center gap-3">
+                    <i data-lucide="calendar-days" class="w-5 h-5 text-blue-500 dark:text-blue-400"></i>
+                    <span id="ov-date" class="text-base font-extrabold text-blue-900 dark:text-blue-300 uppercase tracking-tight"></span>
                 </div>
-                <div class="bg-slate-50 p-5 rounded-2xl border border-slate-100 min-h-[120px]">
-                    <span class="text-[10px] font-bold text-slate-400 uppercase block mb-2">Relatório / Notas</span>
-                    <p id="ov-comment" class="text-sm font-medium text-slate-600 leading-relaxed"></p>
+                <div class="bg-slate-50 dark:bg-slate-800 p-5 rounded-2xl border border-slate-100 dark:border-slate-700 min-h-[120px]">
+                    <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase block mb-2">Relatório / Notas</span>
+                    <p id="ov-comment" class="text-sm font-medium text-slate-600 dark:text-slate-300 leading-relaxed"></p>
                 </div>
                 <div class="grid grid-cols-3 gap-3 pt-2">
-                    <button id="ov-edit-btn" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 py-4 rounded-xl font-bold text-[11px] uppercase text-slate-700 transition-colors flex justify-center items-center gap-1"><i data-lucide="pencil" class="w-3 h-3"></i> Editar</button>
-                    <button id="ov-repro-btn" class="bg-orange-50 hover:bg-orange-100 border border-orange-200 text-orange-700 py-4 rounded-xl font-bold text-[11px] uppercase transition-colors flex justify-center items-center gap-1"><i data-lucide="refresh-cw" class="w-3 h-3"></i> Reprog.</button>
-                    <button id="ov-toggle-btn" class="flex-[2] col-span-1 bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-bold uppercase text-[11px] shadow-lg shadow-blue-200 transition-all flex justify-center items-center gap-2"></button>
+                    <button id="ov-edit-btn" class="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 py-4 rounded-xl font-bold text-[11px] uppercase text-slate-700 dark:text-slate-300 transition-colors flex justify-center items-center gap-1"><i data-lucide="pencil" class="w-3 h-3"></i> Editar</button>
+                    <button id="ov-repro-btn" class="bg-orange-50 dark:bg-orange-900/30 hover:bg-orange-100 dark:hover:bg-orange-900/50 border border-orange-200 dark:border-orange-900/50 text-orange-700 dark:text-orange-400 py-4 rounded-xl font-bold text-[11px] uppercase transition-colors flex justify-center items-center gap-1"><i data-lucide="refresh-cw" class="w-3 h-3"></i> Reprog.</button>
+                    <button id="ov-toggle-btn" class="flex-[2] col-span-1 bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-bold uppercase text-[11px] shadow-lg shadow-blue-200 dark:shadow-none transition-all flex justify-center items-center gap-2"></button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- STATUS MODAL -->
-    <div id="modal-status" class="fixed inset-0 bg-slate-900/60 hidden items-center justify-center z-[800] p-4 modal-backdrop">
-        <div class="bg-white rounded-[32px] w-full max-w-sm overflow-hidden shadow-2xl border border-slate-100 modal-content">
+    <div id="modal-status" class="fixed inset-0 bg-slate-900/60 dark:bg-slate-950/80 hidden items-center justify-center z-[800] p-4 modal-backdrop">
+        <div class="bg-white dark:bg-slate-900 rounded-[32px] w-full max-w-sm overflow-hidden shadow-2xl border border-slate-100 dark:border-slate-800 modal-content">
             <div class="p-8 space-y-6 text-center">
-                <div class="mx-auto w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mb-2">
-                    <i data-lucide="alert-circle" class="w-8 h-8 text-blue-500"></i>
+                <div class="mx-auto w-16 h-16 bg-blue-50 dark:bg-blue-900/30 rounded-full flex items-center justify-center mb-2">
+                    <i data-lucide="alert-circle" class="w-8 h-8 text-blue-500 dark:text-blue-400"></i>
                 </div>
                 <div>
-                    <h3 id="status-modal-title" class="text-xl font-extrabold text-slate-900 uppercase tracking-tight mb-2">Confirmar Ação</h3>
-                    <p id="status-modal-desc" class="text-[13px] font-semibold text-slate-500 leading-relaxed"></p>
+                    <h3 id="status-modal-title" class="text-xl font-extrabold text-slate-900 dark:text-slate-100 uppercase tracking-tight mb-2">Confirmar Ação</h3>
+                    <p id="status-modal-desc" class="text-[13px] font-semibold text-slate-500 dark:text-slate-400 leading-relaxed"></p>
                 </div>
                 <textarea id="status-m-comment" placeholder="Adicionar nota de encerramento/motivo..." class="w-full modal-input h-28 text-sm resize-none"></textarea>
                 <div class="flex gap-3 pt-2">
-                    <button onclick="closeStatusModal()" class="flex-1 bg-slate-100 hover:bg-slate-200 font-bold text-slate-600 text-xs uppercase py-4 rounded-xl transition-colors">Voltar</button>
-                    <button id="status-confirm-btn" class="flex-[2] bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-bold uppercase text-xs shadow-lg shadow-blue-200 transition-all flex justify-center items-center gap-2">Confirmar</button>
+                    <button onclick="closeStatusModal()" class="flex-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 font-bold text-slate-600 dark:text-slate-300 text-xs uppercase py-4 rounded-xl transition-colors">Voltar</button>
+                    <button id="status-confirm-btn" class="flex-[2] bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-bold uppercase text-xs shadow-lg shadow-blue-200 dark:shadow-none transition-all flex justify-center items-center gap-2">Confirmar</button>
                 </div>
             </div>
         </div>
@@ -566,11 +644,18 @@
         const WEEKDAYS = ["DOMINGO", "SEGUNDA-FEIRA", "TERÇA-FEIRA", "QUARTA-FEIRA", "QUINTA-FEIRA", "SEXTA-FEIRA", "SÁBADO"];
         let currentZoom = 35; 
 
-        // Adicionado: File Handle para manter a sincronia local
         let dbFileHandle = null;
 
         let works = JSON.parse(localStorage.getItem('obras_quintiq_blindada')) || [];
         let editingId = null; let tempItems = []; let activeFilter = 'all'; let collapsedDates = new Set(); let pendingStatusAction = null;
+
+        // --- SISTEMA DE TEMA (DARK/LIGHT) ---
+        window.toggleTheme = function() {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            localStorage.setItem('elektro_theme', isDark ? 'dark' : 'light');
+            // Os ícones trocam automaticamente com as classes dark:hidden / hidden dark:block do html
+        };
 
         // --- SISTEMA DE VIEWS (TRABALHO VS DASHBOARD) ---
         window.switchView = function(view) {
@@ -586,8 +671,8 @@
                 dView.classList.remove('hidden');
                 dock.style.display = 'none';
                 
-                btnD.className = "px-3 py-1.5 rounded-lg text-[11px] font-bold bg-white text-slate-800 shadow-sm transition-all flex items-center gap-1.5";
-                btnW.className = "px-3 py-1.5 rounded-lg text-[11px] font-bold text-slate-500 hover:text-slate-700 hover:bg-slate-200/50 transition-all flex items-center gap-1.5";
+                btnD.className = "px-3 py-1.5 rounded-lg text-[11px] font-bold bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-100 shadow-sm transition-all flex items-center gap-1.5";
+                btnW.className = "px-3 py-1.5 rounded-lg text-[11px] font-bold text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition-all flex items-center gap-1.5";
                 
                 renderDashboard();
             } else {
@@ -596,8 +681,8 @@
                 dView.classList.add('hidden');
                 dock.style.display = 'flex';
                 
-                btnW.className = "px-3 py-1.5 rounded-lg text-[11px] font-bold bg-white text-slate-800 shadow-sm transition-all flex items-center gap-1.5";
-                btnD.className = "px-3 py-1.5 rounded-lg text-[11px] font-bold text-slate-500 hover:text-slate-700 hover:bg-slate-200/50 transition-all flex items-center gap-1.5";
+                btnW.className = "px-3 py-1.5 rounded-lg text-[11px] font-bold bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-100 shadow-sm transition-all flex items-center gap-1.5";
+                btnD.className = "px-3 py-1.5 rounded-lg text-[11px] font-bold text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition-all flex items-center gap-1.5";
                 
                 render();
             }
@@ -652,7 +737,7 @@
             countLabel.innerText = `${filtered.length} Obras`;
 
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-400 font-bold text-sm bg-white"><div class="flex flex-col items-center gap-2"><i data-lucide="inbox" class="w-8 h-8 opacity-50"></i> Nenhuma obra encontrada nesta categoria.</div></td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-400 dark:text-slate-500 font-bold text-sm bg-white dark:bg-slate-800"><div class="flex flex-col items-center gap-2"><i data-lucide="inbox" class="w-8 h-8 opacity-50"></i> Nenhuma obra encontrada nesta categoria.</div></td></tr>`;
                 lucide.createIcons();
                 container.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 return;
@@ -660,18 +745,18 @@
 
             tbody.innerHTML = filtered.map(w => {
                 let usVal = parseFloat(w.us) || 0;
-                let statusBadge = w.status === 'finished' ? '<span class="text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-md text-[10px] font-extrabold uppercase border border-emerald-100">Apontada</span>' : 
-                                  w.status === 'reprogramar' ? '<span class="text-slate-500 bg-slate-100 px-2.5 py-1 rounded-md text-[10px] font-extrabold uppercase border border-slate-200">Reprog.</span>' : 
-                                  '<span class="text-amber-600 bg-amber-50 px-2.5 py-1 rounded-md text-[10px] font-extrabold uppercase border border-amber-100">Pendente</span>';
+                let statusBadge = w.status === 'finished' ? '<span class="text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-2.5 py-1 rounded-md text-[10px] font-extrabold uppercase border border-emerald-100 dark:border-emerald-900/50">Apontada</span>' : 
+                                  w.status === 'reprogramar' ? '<span class="text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-md text-[10px] font-extrabold uppercase border border-slate-200 dark:border-slate-700">Reprog.</span>' : 
+                                  '<span class="text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/30 px-2.5 py-1 rounded-md text-[10px] font-extrabold uppercase border border-amber-100 dark:border-amber-900/50">Pendente</span>';
 
                 return `
-                <tr class="hover:bg-blue-50/50 transition-colors cursor-pointer group" onclick="goToWorkFromDash('${w.date}', '${w.start}', '${w.id}')">
-                    <td class="p-4 pl-6 font-extrabold text-slate-800 text-sm flex items-center gap-2.5"><i data-lucide="map-pin" class="w-4 h-4 text-slate-300 group-hover:text-blue-500 transition-colors"></i> ${w.code}</td>
-                    <td class="p-4"><span class="bg-slate-100 text-slate-500 font-bold px-2 py-0.5 rounded text-[10px] uppercase">${w.team}</span></td>
-                    <td class="p-4 text-xs font-bold text-slate-500">${isoToBR(w.date)}</td>
+                <tr class="hover:bg-blue-50/50 dark:hover:bg-slate-700/50 transition-colors cursor-pointer group" onclick="goToWorkFromDash('${w.date}', '${w.start}', '${w.id}')">
+                    <td class="p-4 pl-6 font-extrabold text-slate-800 dark:text-slate-200 text-sm flex items-center gap-2.5"><i data-lucide="map-pin" class="w-4 h-4 text-slate-300 dark:text-slate-500 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors"></i> ${w.code}</td>
+                    <td class="p-4"><span class="bg-slate-100 dark:bg-slate-900 text-slate-500 dark:text-slate-400 font-bold px-2 py-0.5 rounded text-[10px] uppercase">${w.team}</span></td>
+                    <td class="p-4 text-xs font-bold text-slate-500 dark:text-slate-400">${isoToBR(w.date)}</td>
                     <td class="p-4">${statusBadge}</td>
-                    <td class="p-4 pr-6 text-right font-black text-amber-600 text-sm flex justify-end items-center gap-1.5"><i data-lucide="zap" class="w-3.5 h-3.5 opacity-70"></i> ${usVal}</td>
-                    <td class="p-4 text-right pr-6"><button class="text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity bg-blue-50 p-1.5 rounded-lg"><i data-lucide="arrow-right" class="w-4 h-4"></i></button></td>
+                    <td class="p-4 pr-6 text-right font-black text-amber-600 dark:text-amber-500 text-sm flex justify-end items-center gap-1.5"><i data-lucide="zap" class="w-3.5 h-3.5 opacity-70"></i> ${usVal}</td>
+                    <td class="p-4 text-right pr-6"><button class="text-blue-500 dark:text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity bg-blue-50 dark:bg-blue-900/30 p-1.5 rounded-lg"><i data-lucide="arrow-right" class="w-4 h-4"></i></button></td>
                 </tr>
                 `;
             }).join('');
@@ -685,7 +770,6 @@
             setTimeout(() => {
                 scrollToDate(date, start);
                 triggerPulse(id);
-                // Expande a gaveta da barra lateral caso ela esteja fechada (para a obra brilhar lá também)
                 if(collapsedDates.has(date)) toggleDrawer(date);
             }, 100); 
         };
@@ -713,6 +797,7 @@
                 const btn = document.getElementById('btn-sync-db');
                 btn.innerHTML = '<i data-lucide="check-circle" class="w-3 h-3"></i> DB Ativo';
                 btn.classList.replace('text-slate-500', 'text-emerald-600');
+                btn.classList.replace('dark:text-slate-400', 'dark:text-emerald-400');
                 lucide.createIcons();
                 saveData(); 
                 alert("Banco de dados vinculado com sucesso!\n\nDe agora em diante (nesta aba), todas as suas modificações, adições e exclusões serão salvas diretamente neste arquivo de forma automática.");
@@ -789,7 +874,7 @@
             for (let i = 0; i < totalDays; i += dayStep) {
                 const dObj = new Date(START_TS + (i * MS_PER_DAY));
                 const group = document.createElement('div');
-                group.className = 'day-group flex flex-col border-r border-slate-200';
+                group.className = 'day-group flex flex-col border-r border-slate-200 dark:border-slate-800';
                 if(dayStep > 1) group.style.width = `calc(var(--day-w) * ${dayStep})`;
                 
                 const info = document.createElement('div');
@@ -853,13 +938,13 @@
             const pendingList = works.filter(w => w.status === 'pending');
 
             const renderChips = (container, l, iconHtml, extraClass) => {
-                if(l.length === 0) { container.innerHTML = `<span class="text-[10px] text-slate-300 italic px-2 font-semibold">Nenhum registro</span>`; return; }
+                if(l.length === 0) { container.innerHTML = `<span class="text-[10px] text-slate-300 dark:text-slate-500 italic px-2 font-semibold">Nenhum registro</span>`; return; }
                 container.innerHTML = l.map(w => `<div onclick="scrollToDate('${w.date}', '${w.start}'); triggerPulse('${w.id}')" class="row-item-chip ${extraClass}"> ${iconHtml} ${w.code}</div>`).join('');
             };
 
-            renderChips(rowRepro, reproList, '<i data-lucide="refresh-ccw" class="w-3 h-3 text-orange-500"></i>', 'hover:border-orange-200 hover:bg-orange-50');
-            renderChips(rowFinished, finishedList, '<i data-lucide="check" class="w-3 h-3 text-emerald-500"></i>', 'hover:border-emerald-200 hover:bg-emerald-50');
-            renderChips(rowPending, pendingList, '<i data-lucide="clock" class="w-3 h-3 text-blue-500"></i>', 'hover:border-blue-200 hover:bg-blue-50');
+            renderChips(rowRepro, reproList, '<i data-lucide="refresh-ccw" class="w-3 h-3 text-orange-500"></i>', 'hover:border-orange-200 dark:hover:border-orange-500 hover:bg-orange-50');
+            renderChips(rowFinished, finishedList, '<i data-lucide="check" class="w-3 h-3 text-emerald-500"></i>', 'hover:border-emerald-200 dark:hover:border-emerald-500 hover:bg-emerald-50');
+            renderChips(rowPending, pendingList, '<i data-lucide="clock" class="w-3 h-3 text-blue-500"></i>', 'hover:border-blue-200 dark:hover:border-blue-500 hover:bg-blue-50');
 
             document.getElementById('sidebar-count').innerText = `${works.length} OBRAS`;
 
@@ -884,7 +969,7 @@
                 header.className = 'date-drawer-header group';
                 header.onclick = () => toggleDrawer(d);
                 const isCol = collapsedDates.has(d);
-                header.innerHTML = `<span class="flex items-center gap-2"><i data-lucide="${isCol?'chevron-right':'chevron-down'}" class="w-4 h-4 text-slate-300 group-hover:text-blue-500 transition-colors"></i> 📅 ${isoToBR(d)}</span><span class="bg-slate-100 px-2 py-0.5 rounded-md text-[10px]">${grouped[d].length}</span>`;
+                header.innerHTML = `<span class="flex items-center gap-2"><i data-lucide="${isCol?'chevron-right':'chevron-down'}" class="w-4 h-4 text-slate-300 dark:text-slate-500 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors"></i> 📅 ${isoToBR(d)}</span><span class="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md text-[10px] text-slate-500 dark:text-slate-400">${grouped[d].length}</span>`;
                 list.appendChild(header);
 
                 if(!isCol) {
@@ -896,24 +981,23 @@
                         
                         let actionButtons = '';
                         if(w.status !== 'finished') {
-                            actionButtons += `<button onclick="toggleWork(${w.id},'${w.code}',event)" class="bg-emerald-50 hover:bg-emerald-100 p-2 rounded-lg text-emerald-600 transition-colors" title="Apontar"><i data-lucide="check" class="w-4 h-4"></i></button>`;
+                            actionButtons += `<button onclick="toggleWork(${w.id},'${w.code}',event)" class="bg-emerald-50 dark:bg-emerald-900/30 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 p-2 rounded-lg text-emerald-600 dark:text-emerald-400 transition-colors" title="Apontar"><i data-lucide="check" class="w-4 h-4"></i></button>`;
                         } else {
-                            actionButtons += `<button onclick="toggleWork(${w.id},'${w.code}',event)" class="bg-slate-50 hover:bg-slate-100 p-2 rounded-lg text-slate-400 transition-colors" title="Reverter"><i data-lucide="rotate-ccw" class="w-4 h-4"></i></button>`;
+                            actionButtons += `<button onclick="toggleWork(${w.id},'${w.code}',event)" class="bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 p-2 rounded-lg text-slate-400 dark:text-slate-500 transition-colors" title="Reverter"><i data-lucide="rotate-ccw" class="w-4 h-4"></i></button>`;
                         }
-                        actionButtons += `<button onclick="event.stopPropagation(); toggleModal('edit',${w.id})" class="bg-blue-50 hover:bg-blue-100 p-2 rounded-lg text-blue-600 transition-colors" title="Editar"><i data-lucide="pencil" class="w-4 h-4"></i></button>`;
+                        actionButtons += `<button onclick="event.stopPropagation(); toggleModal('edit',${w.id})" class="bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50 p-2 rounded-lg text-blue-600 dark:text-blue-400 transition-colors" title="Editar"><i data-lucide="pencil" class="w-4 h-4"></i></button>`;
 
-                        // Tag de US adicionada ao card
-                        const usTag = w.us && w.us > 0 ? `<span class="bg-amber-100 text-amber-700 text-[9px] font-bold px-1.5 py-0.5 rounded uppercase flex items-center gap-0.5" title="${w.us} Unidades de Serviço"><i data-lucide="zap" class="w-3 h-3"></i> ${w.us}</span>` : '';
+                        const usTag = w.us && w.us > 0 ? `<span class="bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 text-[9px] font-bold px-1.5 py-0.5 rounded uppercase flex items-center gap-0.5" title="${w.us} Unidades de Serviço"><i data-lucide="zap" class="w-3 h-3"></i> ${w.us}</span>` : '';
 
                         card.innerHTML = `
                             <div class="flex justify-between items-center">
                                 <div class="flex-1">
                                     <div class="flex items-center gap-2 mb-1 flex-wrap">
                                         <p class="obra-code-text">${w.code}</p>
-                                        <span class="bg-slate-100 text-slate-500 text-[9px] font-bold px-1.5 py-0.5 rounded uppercase">${w.team}</span>
+                                        <span class="bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-[9px] font-bold px-1.5 py-0.5 rounded uppercase">${w.team}</span>
                                         ${usTag}
                                     </div>
-                                    <p class="text-[11px] font-semibold text-slate-400 flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> ${w.start} - ${w.end}</p>
+                                    <p class="text-[11px] font-semibold text-slate-400 dark:text-slate-500 flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> ${w.start} - ${w.end}</p>
                                 </div>
                                 <div class="flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-2 group-hover:translate-x-0">
                                     ${actionButtons}
@@ -973,7 +1057,7 @@
                 {id:'reprogramar',l:'Repro'}
             ];
             container.innerHTML = btns.map(b => `<div onclick="setActiveFilter('${b.id}')" class="filter-bubble ${activeFilter===b.id?'active':''}">${b.l}</div>`).join('') + 
-                `<div class="w-px h-5 bg-slate-200 mx-2 flex-shrink-0 self-center"></div>` + 
+                `<div class="w-px h-5 bg-slate-200 dark:bg-slate-700 mx-2 flex-shrink-0 self-center"></div>` + 
                 TEAMS.map(t => `<div onclick="setActiveFilter('${t}')" class="filter-bubble ${activeFilter===t?'active':''}">${t}</div>`).join('');
         }
 
@@ -995,10 +1079,10 @@
                 document.getElementById('m-date').value = item.date;
                 document.getElementById('m-start').value = item.start;
                 document.getElementById('m-end').value = item.end;
-                document.getElementById('m-us').value = item.us || ''; // Popula campo US
+                document.getElementById('m-us').value = item.us || '';
                 document.getElementById('m-comment').value = item.comment || '';
                 generateTeamToggles([item.team]);
-                document.getElementById('modal-title').innerHTML = `<i data-lucide="pencil" class="w-5 h-5 text-blue-600"></i> Editar Obra`;
+                document.getElementById('modal-title').innerHTML = `<i data-lucide="pencil" class="w-5 h-5 text-blue-600 dark:text-blue-500"></i> Editar Obra`;
                 document.getElementById('modal-primary-btn').innerHTML = `<i data-lucide="save" class="w-5 h-5"></i> SALVAR ALTERAÇÕES`;
                 document.getElementById('modal-confirm-btn').style.display = "none";
                 document.getElementById('batch-table-container').style.display = "none";
@@ -1009,9 +1093,9 @@
                 document.getElementById('m-comment').value = '';
                 document.getElementById('m-start').value = '08:00';
                 document.getElementById('m-end').value = '12:00';
-                document.getElementById('m-us').value = ''; // Limpa campo US
+                document.getElementById('m-us').value = '';
                 generateTeamToggles(["BB30"]);
-                document.getElementById('modal-title').innerHTML = `<i data-lucide="plus-circle" class="w-5 h-5 text-blue-600"></i> Lançamento em Lote`;
+                document.getElementById('modal-title').innerHTML = `<i data-lucide="plus-circle" class="w-5 h-5 text-blue-600 dark:text-blue-500"></i> Lançamento em Lote`;
                 document.getElementById('modal-primary-btn').innerHTML = `<i data-lucide="list-plus" class="w-5 h-5"></i> ADICIONAR À FILA`;
                 document.getElementById('modal-confirm-btn').style.display = "flex";
                 document.getElementById('batch-table-container').style.display = "block";
@@ -1032,7 +1116,7 @@
                 works = works.map(w => w.id === editingId ? {
                     ...w, code, date: document.getElementById('m-date').value,
                     start: document.getElementById('m-start').value, end: document.getElementById('m-end').value,
-                    us: parsedUs, // Atualiza US
+                    us: parsedUs, 
                     team: teams[0], comment: document.getElementById('m-comment').value
                 } : w);
                 
@@ -1048,7 +1132,7 @@
             teams.forEach(t => tempItems.push({ 
                 id: Date.now()+Math.random(), code, date, team: t, 
                 start: document.getElementById('m-start').value, end: document.getElementById('m-end').value, 
-                us: parsedUs, // Associa US no lote
+                us: parsedUs, 
                 comment: document.getElementById('m-comment').value, status: 'pending' 
             }));
             
@@ -1065,12 +1149,12 @@
             if(tempItems.length > 0) {
                 emptyLabel.style.display = 'none';
                 tempTable.innerHTML = tempItems.map(item => `
-                    <tr class="hover:bg-slate-50 transition-colors">
-                        <td class="p-4 font-bold text-slate-800">${item.code}</td>
-                        <td class="p-4"><span class="bg-blue-100 text-blue-700 text-xs font-bold px-2 py-1 rounded">${item.team}</span></td>
-                        <td class="p-4 text-center font-bold text-amber-600">${item.us && item.us > 0 ? item.us : '-'}</td>
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                        <td class="p-4 font-bold text-slate-800 dark:text-slate-200">${item.code}</td>
+                        <td class="p-4"><span class="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400 text-xs font-bold px-2 py-1 rounded">${item.team}</span></td>
+                        <td class="p-4 text-center font-bold text-amber-600 dark:text-amber-500">${item.us && item.us > 0 ? item.us : '-'}</td>
                         <td class="p-4 text-right">
-                            <button onclick="tempItems=tempItems.filter(x=>x.id!==${item.id});updateTempList();" class="text-slate-300 hover:text-red-500 bg-white shadow-sm p-1.5 rounded-lg border border-slate-200 transition-colors">
+                            <button onclick="tempItems=tempItems.filter(x=>x.id!==${item.id});updateTempList();" class="text-slate-300 dark:text-slate-500 hover:text-red-500 dark:hover:text-red-400 bg-white dark:bg-slate-800 shadow-sm p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 transition-colors">
                                 <i data-lucide="trash-2" class="w-4 h-4"></i>
                             </button>
                         </td>
@@ -1097,13 +1181,13 @@
             if(event) event.stopPropagation(); 
             const w = works.find(x => x.id == id);
             if(w.status==='finished') { works=works.map(x=>x.id==id?{...x,status:'pending'}:x); saveData(); render(); }
-            else openStatusModal(id, 'finished', `Deseja marcar a obra <b>${code}</b> da equipe <b>${w.team}</b> como apontada?`);
+            else openStatusModal(id, 'finished', `Deseja marcar a obra <b class="text-slate-800 dark:text-white">${code}</b> da equipe <b class="text-slate-800 dark:text-white">${w.team}</b> como apontada?`);
         };
 
         window.setReprogramar = function(id, code, event) {
             if(event) event.stopPropagation();
             const w = works.find(x => x.id == id);
-            openStatusModal(id, 'reprogramar', `Deseja enviar a obra <b>${code}</b> (${w.team}) para a fila de reprogramação?`);
+            openStatusModal(id, 'reprogramar', `Deseja enviar a obra <b class="text-slate-800 dark:text-white">${code}</b> (${w.team}) para a fila de reprogramação?`);
         };
 
         window.openStatusModal = function(id, st, descHtml) {
@@ -1115,10 +1199,10 @@
             
             const btn = document.getElementById('status-confirm-btn');
             if(st === 'finished') {
-                btn.className = "flex-[2] bg-emerald-500 hover:bg-emerald-600 text-white py-4 rounded-xl font-bold uppercase text-xs shadow-lg shadow-emerald-200 transition-all flex justify-center items-center gap-2";
+                btn.className = "flex-[2] bg-emerald-500 hover:bg-emerald-600 text-white py-4 rounded-xl font-bold uppercase text-xs shadow-lg shadow-emerald-200 dark:shadow-none transition-all flex justify-center items-center gap-2";
                 btn.innerHTML = `<i data-lucide="check" class="w-4 h-4"></i> Apontar Obra`;
             } else {
-                btn.className = "flex-[2] bg-orange-500 hover:bg-orange-600 text-white py-4 rounded-xl font-bold uppercase text-xs shadow-lg shadow-orange-200 transition-all flex justify-center items-center gap-2";
+                btn.className = "flex-[2] bg-orange-500 hover:bg-orange-600 text-white py-4 rounded-xl font-bold uppercase text-xs shadow-lg shadow-orange-200 dark:shadow-none transition-all flex justify-center items-center gap-2";
                 btn.innerHTML = `<i data-lucide="refresh-cw" class="w-4 h-4"></i> Reprogramar`;
             }
             lucide.createIcons();
@@ -1137,7 +1221,6 @@
             document.getElementById('ov-code').innerText = item.code;
             document.getElementById('ov-time').innerText = `${item.start} - ${item.end}`;
             
-            // Exibição da US no Card de Overview
             document.getElementById('ov-us').innerText = item.us && item.us > 0 ? `${item.us} US` : '--';
 
             const [y, m_iso, d] = item.date.split('-');
@@ -1155,21 +1238,21 @@
                 dot.style.color = "#10b981"; dot.style.backgroundColor = "#10b981"; 
                 txt.innerText = "Apontada no Campo"; 
                 btn.innerHTML = `<i data-lucide="rotate-ccw" class="w-4 h-4"></i> Reverter`; 
-                btn.className = "flex-[2] col-span-2 bg-slate-800 hover:bg-slate-900 text-white py-4 rounded-xl font-bold uppercase text-[11px] shadow-lg transition-all flex justify-center items-center gap-2";
+                btn.className = "flex-[2] col-span-2 bg-slate-800 hover:bg-slate-950 dark:bg-slate-700 dark:hover:bg-slate-600 text-white py-4 rounded-xl font-bold uppercase text-[11px] shadow-lg transition-all flex justify-center items-center gap-2";
                 btnRepro.classList.add('hidden'); 
             }
             else if (item.status === 'reprogramar') { 
                 dot.style.color = "#94a3b8"; dot.style.backgroundColor = "#94a3b8"; 
                 txt.innerText = "Em Reprogramação"; 
                 btn.innerHTML = `<i data-lucide="play" class="w-4 h-4"></i> Reativar`; 
-                btn.className = "flex-[2] col-span-2 bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-bold uppercase text-[11px] shadow-lg shadow-blue-200 transition-all flex justify-center items-center gap-2";
+                btn.className = "flex-[2] col-span-2 bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-bold uppercase text-[11px] shadow-lg shadow-blue-200 dark:shadow-none transition-all flex justify-center items-center gap-2";
                 btnRepro.classList.add('hidden'); 
             }
             else { 
                 dot.style.color = "#f59e0b"; dot.style.backgroundColor = "#f59e0b"; 
                 txt.innerText = "Pendente de Execução"; 
                 btn.innerHTML = `<i data-lucide="check" class="w-4 h-4"></i> Finalizar Obra`; 
-                btn.className = "flex-[2] col-span-1 bg-emerald-500 hover:bg-emerald-600 text-white py-4 rounded-xl font-bold uppercase text-[11px] shadow-lg shadow-emerald-200 transition-all flex justify-center items-center gap-2";
+                btn.className = "flex-[2] col-span-1 bg-emerald-500 hover:bg-emerald-600 text-white py-4 rounded-xl font-bold uppercase text-[11px] shadow-lg shadow-emerald-200 dark:shadow-none transition-all flex justify-center items-center gap-2";
                 btnRepro.classList.remove('hidden'); 
             }
             
@@ -1190,10 +1273,10 @@
                 div.innerHTML = filtered.map(w => `
                     <div class="search-result-item group" onclick="scrollToDate('${w.date}','${w.start}'); triggerPulse('${w.id}'); document.getElementById('search-results').style.display='none'; document.getElementById('finder-work').value='';">
                         <span class="flex items-center gap-2">
-                            <i data-lucide="map-pin" class="w-3 h-3 text-slate-300 group-hover:text-blue-500 transition-colors"></i> ${w.code}
-                            ${w.us && w.us > 0 ? `<span class="bg-amber-100 text-amber-700 font-bold px-1.5 py-0.5 rounded text-[10px] flex items-center gap-0.5 ml-2"><i data-lucide="zap" class="w-3 h-3"></i> ${w.us}</span>` : ''}
+                            <i data-lucide="map-pin" class="w-3 h-3 text-slate-300 dark:text-slate-500 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors"></i> ${w.code}
+                            ${w.us && w.us > 0 ? `<span class="bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 font-bold px-1.5 py-0.5 rounded text-[10px] flex items-center gap-0.5 ml-2"><i data-lucide="zap" class="w-3 h-3"></i> ${w.us}</span>` : ''}
                         </span>
-                        <span class="bg-slate-100 text-slate-500 font-bold px-2 py-0.5 rounded text-[10px] uppercase">${w.team}</span>
+                        <span class="bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-bold px-2 py-0.5 rounded text-[10px] uppercase">${w.team}</span>
                     </div>`).join('');
                 div.style.display = 'block';
                 lucide.createIcons();
