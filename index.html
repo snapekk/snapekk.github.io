@@ -573,7 +573,7 @@
     <div id="modal-overview" class="fixed inset-0 bg-slate-900/60 dark:bg-slate-950/80 hidden items-center justify-center z-[700] p-4 modal-backdrop">
         <div class="bg-white dark:bg-slate-900 rounded-[32px] w-full max-w-md overflow-hidden shadow-2xl border border-slate-100 dark:border-slate-800 modal-content relative">
             <div class="bg-slate-900 p-8 text-white relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-2xl -mr-10 -mt-10"></div>
+                <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none"></div>
                 <button onclick="closeOverview()" class="absolute top-6 right-6 p-2 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors z-10"><i data-lucide="x" class="w-5 h-5"></i></button>
                 
                 <div class="flex items-center gap-3 mb-4 relative z-10">
@@ -1283,9 +1283,19 @@
             } else div.style.display = 'none';
         };
 
-        window.closeOverview = function() { document.getElementById('modal-overview').classList.add('hidden'); };
-        window.closeStatusModal = function() { document.getElementById('modal-status').classList.add('hidden'); };
-        window.closeModal = function() { document.getElementById('modal').classList.add('hidden'); };
+        // CORREÇÃO DOS BOTÕES DOS MODAIS: Remover o 'flex' ao fechar
+        window.closeOverview = function() { 
+            const m = document.getElementById('modal-overview');
+            m.classList.remove('flex'); m.classList.add('hidden'); 
+        };
+        window.closeStatusModal = function() { 
+            const m = document.getElementById('modal-status');
+            m.classList.remove('flex'); m.classList.add('hidden'); 
+        };
+        window.closeModal = function() { 
+            const m = document.getElementById('modal');
+            m.classList.remove('flex'); m.classList.add('hidden'); 
+        };
 
         window.onload = init;
     </script>
